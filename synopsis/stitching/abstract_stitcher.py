@@ -8,5 +8,5 @@ class AbstractStitcher(ABC):
     # TODO: add return type hints for methods
 
     @abstractmethod
-    def stitch(self, schedule):
+    def stitch(self, activity_tubes: List[ActivityTube], schedule: List[int]):
         pass

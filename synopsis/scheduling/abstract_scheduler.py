@@ -8,5 +8,5 @@ class AbstractScheduler(ABC):
     # TODO: add return type hints for methods
 
     @abstractmethod
-    def schedule(self, activity_tubes: List[ActivityTube]):
+    def schedule(self, activity_tubes: List[ActivityTube]) -> List[int]:
         pass
