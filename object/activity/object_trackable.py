@@ -1,5 +1,11 @@
+import numpy as np
+from typing import List, NoReturn
+from nptyping import Array
+
+from object.activity.bounding_box import BoundingBox
+
+
 class ObjectTrackable:
-    def __init__(self, upper_left, lower_right, data):
-        self.upper_left = upper_left
-        self.lower_right = lower_right
+    def __init__(self, bounding_box: BoundingBox, data: Array[np.int]):
+        self.box = bounding_box
         self.data = data
