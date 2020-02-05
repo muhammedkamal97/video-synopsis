@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from object.activity.bounding_box import BoundingBox
 
 
-class AbstractObjectTracker(ABC):
+class AbstractObjectDetector(ABC):
 
     @abstractmethod
     def detect(self, frame: Array[np.int]) -> List[BoundingBox]:
