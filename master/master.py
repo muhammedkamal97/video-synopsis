@@ -84,6 +84,7 @@ class Master:
     def construct_synopsis(self, writer: VideoWriter):
         activity_tubes = self.activity_aggregator.get_activity_tubes()
         schedule = self.scheduler.schedule(activity_tubes)
+        # TODO: pass background selector to stitcher?
         self.stitcher.initialize(activity_tubes, schedule)
 
         while self.stitcher.has_next_frame():
