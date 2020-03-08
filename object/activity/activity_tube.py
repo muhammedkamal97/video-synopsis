@@ -12,5 +12,8 @@ class ActivityTube:
     def get_data(self):
         return self.__data
 
+    def get_num_frames(self) -> int:
+        return len(self.__data)
+
     def add_trackable(self, trackable: ObjectTrackable):
         self.__data.append(trackable)
