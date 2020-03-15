@@ -8,4 +8,17 @@ class AbstractScheduler(ABC):
 
     @abstractmethod
     def schedule(self, activity_tubes: List[ActivityTube]) -> List[int]:
+        """Schedule the given activity tubes and compute their starting frame in the synopsis video.
+
+        Parameters
+        ----------
+        activity_tubes : List[ActivityTube]
+            The list of activity tubes to be scheduled.
+
+        Returns
+        ------
+        List[int]
+            List of integers with same length as the activity_tubes list.
+            Each integer represents the starting frame of the activity tube -with the same index- in the synopsis video.
+        """
         pass

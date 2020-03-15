@@ -11,6 +11,6 @@ class BasicScheduler(AbstractScheduler):
         for i in range(1, len(activity_tubes)):
             start_frame = -1
             for j in range(i):
-                start_frame = max([get_uncolide_start_frame(activity_tubes[j], activity_tubes[i]), start_frame])
+                start_frame = max([get_uncollide_start_frame(activity_tubes[j], activity_tubes[i]), start_frame])
             start_frames.append(start_frame)
         return start_frames
