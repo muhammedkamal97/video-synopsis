@@ -7,5 +7,4 @@ class AbstractBGExtractor(ABC):
 
     @abstractmethod
     def extract_background(self, frame: Array[np.int]) -> Array[np.int]:
-
         pass
