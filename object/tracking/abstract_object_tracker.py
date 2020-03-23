@@ -7,7 +7,8 @@ from object.activity.bounding_box import BoundingBox
 
 
 def map_detected_box_to_rectangle(detected_box: BoundingBox):
-	return [detected_box.upper_left[:], detected_box.lower_right[:]]
+	return np.array([detected_box.upper_left[0], detected_box.upper_left[1], detected_box.lower_right[0],
+					 detected_box.lower_right[1]])
 
 
 class AbstractObjectTracker(ABC):
