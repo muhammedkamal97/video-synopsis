@@ -1,3 +1,4 @@
+scikit-image
 nptyping==0.3.1
 numpy==1.18.1
 opencv-python==4.2.0.32

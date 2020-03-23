@@ -1,8 +1,8 @@
 import numpy as np
 from nptyping import Array
-import cv2 as cv
-from skimage.measure import compare_ssim
-from background.extraction.abstract_bg_selector import AbstractBGSelector
+from skimage.metrics import structural_similarity
+from background.selection.abstract_bg_selector import AbstractBGSelector
+
 
 class BGSelector(AbstractBGSelector):
 
@@ -20,15 +20,18 @@ class BGSelector(AbstractBGSelector):
             self.list_of_bgs.append(background_frame)
             self.count += 1
             self.is_first_frame = False
-        else :
-            (score, diff) = compare_ssim(background_frame, self.list_of_bgs[self.count-1], full = True,  multichannel=True)
-            if score >= 0.9: # to be tunned
+        else:
+            (score, diff) = structural_similarity(
+                background_frame, self.list_of_bgs[self.count-1],
+                full=True,
+                multichannel=True)
+            if score >= 0.9:  # to be tuned
                 self.background_mapper[self.frame_no] = self.count - 1
             else :
                 self.background_mapper[self.frame_no] = self.count
                 self.list_of_bgs.append(background_frame)
-                self.count +=1
-        self.frame_no +=1
+                self.count += 1
+        self.frame_no += 1
         
     def map(self, frame_no: int) -> Array[np.int]:
         return self.list_of_bgs[self.background_mapper[frame_no]]
