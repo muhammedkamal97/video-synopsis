@@ -74,7 +74,7 @@ class Stitcher(AbstractStitcher):
 
     def _set_synopsis_length(self):
         length = 0
-        for tube, start_frame in self.activity_tubes, self.schedule:
+        for tube, start_frame in list(zip(self.activity_tubes, self.schedule)):
             tube_end_frame = len(tube.get_data()) + start_frame
             length = max(length, tube_end_frame)
 
