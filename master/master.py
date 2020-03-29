@@ -30,13 +30,13 @@ class Master:
     MODULES = [
         'bg_extractor',
         'bg_selector',
-        'preprocessor',
+        # 'preprocessor',
         'object_detector',
         'object_tracker',
         'activity_aggregator',
-        'chopper',
+        # 'chopper',
         'scheduler',
-        'stitcher'
+        # 'stitcher'
     ]
 
     def __init__(self, slaves: dict):
@@ -44,13 +44,13 @@ class Master:
             setattr(self, m, slaves[m])
 
     def run(self, capture: VideoCapture, writer: VideoWriter):
+        print("entered run")
         if not capture.isOpened():
             raise Exception("Capture not open")
         if not writer.isOpened():
             raise Exception("Writer not open")
 
         frame_count = 0
-
         while True:
             ret, frame = capture.read()
             if not ret:
@@ -58,18 +58,23 @@ class Master:
                 break
 
             self.model_background(frame)
+            
             frame_count += 1
-
+            
             frame = self.preprocessor.process(frame)
+            print('passed background ',frame_count)
+            
             if frame is None:
                 continue
 
             self.process_frame(frame)
-            if self.chop_synopsis():
-                self.construct_synopsis(writer)
+            print('passed process ', frame_count)
 
+            # if self.chop_synopsis():
+            #     self.construct_synopsis(writer)
+            
             if cv.waitKey(1) == ord('q'):
-                self.construct_synopsis(writer)
+                # self.construct_synopsis(writer)
                 break
 
     def model_background(self, frame: Array[np.int], frame_count: int):
