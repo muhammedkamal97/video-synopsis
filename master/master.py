@@ -1,8 +1,6 @@
 import numpy as np
 from nptyping import Array
-import cv2 as cv
 from cv2 import VideoCapture, VideoWriter
-
 from background.extraction.abstact_bg_extractor import AbstractBGExtractor
 from background.selection.abstract_bg_selector import AbstractBGSelector
 from object.activity.activity_aggreagator import ActivityAggregator
@@ -36,7 +34,7 @@ class Master:
         'activity_aggregator',
         # 'chopper',
         'scheduler',
-        # 'stitcher'
+        'stitcher'
     ]
 
     def __init__(self, slaves: dict):
@@ -44,7 +42,6 @@ class Master:
             setattr(self, m, slaves[m])
 
     def run(self, capture: VideoCapture, writer: VideoWriter):
-        print("entered run")
         if not capture.isOpened():
             raise Exception("Capture not open")
         if not writer.isOpened():
@@ -57,25 +54,25 @@ class Master:
                 self.construct_synopsis(writer)
                 break
 
-            self.model_background(frame)
+            self.model_background(frame, frame_count)
             
             frame_count += 1
             
-            frame = self.preprocessor.process(frame)
-            print('passed background ',frame_count)
-            
+            # frame = self.preprocessor.process(frame)
+
             if frame is None:
                 continue
 
             self.process_frame(frame)
-            print('passed process ', frame_count)
+            if frame_count % 1000 == 0:
+                print('frame passed', frame_count)
 
             # if self.chop_synopsis():
             #     self.construct_synopsis(writer)
             
-            if cv.waitKey(1) == ord('q'):
-                # self.construct_synopsis(writer)
-                break
+            # if cv.waitKey(1) == ord('q'):
+            #     self.construct_synopsis(writer)
+            #     break
 
     def model_background(self, frame: Array[np.int], frame_count: int):
         bg_frame = self.bg_extractor.extract_background(frame)

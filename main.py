@@ -5,17 +5,15 @@ from background.selection.bg_selector import BGSelector
 from object.preprocessing.abstract_preprocessor import AbstractPreprocessor
 from object.activity.activity_aggreagator import ActivityAggregator
 from object.detection.cach_detector import CachDetector
-from object.preprocessing.abstract_preprocessor import AbstractPreprocessor
 from object.tracking.sort_tracker import SortTracker
 from synopsis.chopping.abstract_synopsis_chopper import AbstractSynopsisChopper
 from synopsis.scheduling.basic_scheduler import BasicScheduler
-from synopsis.stitching.abstract_stitcher import AbstractStitcher
+from synopsis.stitching.stitcher import Stitcher
 from master.master import Master
 
 
 cap = VideoCapture('12_47.mp4')
 out = VideoWriter('output.mp4', 0x7634706d, 10, (400, 400))
-
 bg_extractor = BGExtractor()
 bg_selector = BGSelector()
 # preprocessor = AbstractPreprocessor()
@@ -24,7 +22,7 @@ object_tracker = SortTracker()
 activity_aggregator = ActivityAggregator()
 # chopper = AbstractSynopsisChopper()
 scheduler = BasicScheduler()
-# stitcher = AbstractStitcher()
+stitcher = Stitcher()
 
 slaves = {
     'bg_extractor': bg_extractor,
@@ -35,7 +33,7 @@ slaves = {
     'activity_aggregator': activity_aggregator,
     # 'chopper': chopper,
     'scheduler': scheduler,
-    # 'stitcher': stitcher
+    'stitcher': stitcher
 }
 
 master = Master(slaves)

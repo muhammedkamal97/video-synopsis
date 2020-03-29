@@ -11,12 +11,11 @@ class BGSelector(AbstractBGSelector):
         self.list_of_bgs = []
         self.is_first_frame = True
         self.count = 0
-        self.frame_no = 0
 
-    def consume(self, background_frame: Array[np.int]):
+    def consume(self, background_frame: Array[np.int], frame_no: int):
         
         if self.is_first_frame:
-            self.background_mapper[self.frame_no] = self.count
+            self.background_mapper[frame_no] = self.count
             self.list_of_bgs.append(background_frame)
             self.count += 1
             self.is_first_frame = False
@@ -26,13 +25,12 @@ class BGSelector(AbstractBGSelector):
                 full=True,
                 multichannel=True)
             if score >= 0.9:  # to be tuned
-                self.background_mapper[self.frame_no] = self.count - 1
+                self.background_mapper[frame_no] = self.count - 1
             else :
-                self.background_mapper[self.frame_no] = self.count
+                self.background_mapper[frame_no] = self.count
                 self.list_of_bgs.append(background_frame)
                 self.count += 1
-        self.frame_no += 1
-        
+
     def map(self, frame_no: int) -> Array[np.int]:
         return self.list_of_bgs[self.background_mapper[frame_no]]
     
