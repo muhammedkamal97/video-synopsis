@@ -14,7 +14,7 @@ from master.master import Master
 
 
 cap = VideoCapture('12_47.mp4')
-out = VideoWriter('output.mp4', cv.VideoWriter_fourcc('M', 'J', 'P', 'G'), 10, (400, 400))
+out = VideoWriter('output.mp4', 0x7634706d, 10, (400, 400))
 
 bg_extractor = BGExtractor()
 bg_selector = BGSelector()
