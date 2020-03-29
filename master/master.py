@@ -50,7 +50,7 @@ class Master:
         if not writer.isOpened():
             raise Exception("Writer not open")
 
-        i = 0
+        frame_count = 0
         while True:
             ret, frame = capture.read()
             if not ret:
@@ -58,26 +58,28 @@ class Master:
                 break
 
             self.model_background(frame)
-            print('passed background ',i)
-            # frame = self.preprocessor.process(frame)
+            
+            frame_count += 1
+            
+            frame = self.preprocessor.process(frame)
+            print('passed background ',frame_count)
+            
             if frame is None:
                 continue
 
             self.process_frame(frame)
-            print('passed process ', i)
+            print('passed process ', frame_count)
 
             # if self.chop_synopsis():
             #     self.construct_synopsis(writer)
-
-            i +=1
             
             if cv.waitKey(1) == ord('q'):
                 # self.construct_synopsis(writer)
                 break
 
-    def model_background(self, frame: Array[np.int]):
+    def model_background(self, frame: Array[np.int], frame_count: int):
         bg_frame = self.bg_extractor.extract_background(frame)
-        self.bg_selector.consume(bg_frame)
+        self.bg_selector.consume(bg_frame, frame_count)
 
     def process_frame(self, frame: Array[np.int]):
         detected_boxes = self.object_detector.detect(frame)
@@ -87,14 +89,14 @@ class Master:
     def chop_synopsis(self):
         self.chopper.to_chop(self.activity_aggregator)
 
-    def construct_synopsis(self, writer: VideoWriter):
+    # TODO: use a separate data structure for background frames with stitcher
+    def construct_synopsis(self, writer: VideoWriter, frame_count: int):
         activity_tubes = self.activity_aggregator.get_activity_tubes()
         schedule = self.scheduler.schedule(activity_tubes)
-        # TODO: pass background selector to stitcher?
-        self.stitcher.initialize(activity_tubes, schedule)
+        self.stitcher.initialize(activity_tubes, schedule, self.bg_selector, frame_count)
 
         while self.stitcher.has_next_frame():
             writer.write(self.stitcher.next_frame())
 
         self.activity_aggregator.clear()
-        # TODO: clear background selector?
+        self.bg_selector.clear()
