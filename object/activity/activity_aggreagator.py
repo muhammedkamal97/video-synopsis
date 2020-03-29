@@ -25,7 +25,7 @@ class ActivityAggregator:
             self.__activity_tubes[obj_id].add_trackable(ObjectTrackable(box, data))
 
     def get_activity_tubes(self):
-        return self.__activity_tubes
+        return self.__activity_tubes.values()
 
     def clear(self):
         self.__activity_tubes = {}
