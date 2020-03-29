@@ -68,7 +68,7 @@ class Master:
             if frame_count % 100 == 0:
                 print("number of frames ", frame_count)
 
-            if frame_count % 1000 == 0:
+            if frame_count == 3000:
                 self.construct_synopsis(writer, frame_count)
                 break
 
@@ -99,7 +99,9 @@ class Master:
         self.stitcher.initialize(activity_tubes, schedule, self.bg_selector, frame_count)
 
         while self.stitcher.has_next_frame():
-            writer.write(self.stitcher.next_frame())
+            n = self.stitcher.next_frame()
+            cv.imwrite("test.jpg", n)
+            writer.write(n)
 
         self.activity_aggregator.clear()
         self.bg_selector.clear()

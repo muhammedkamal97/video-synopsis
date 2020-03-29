@@ -38,7 +38,7 @@ class Stitcher(AbstractStitcher):
 
     def process_frame(self) -> Optional[Array[np.int]]:
         if self.frame_count == self.synopsis_length:
-            return
+            return None
 
         while len(self.activity_schedule) != 0 and self.frame_count == self.activity_schedule[0][0]:  # Mark new tubes to be active
             _, new_tube = heapq.heappop(self.activity_schedule)
@@ -47,6 +47,7 @@ class Stitcher(AbstractStitcher):
 
         frame = self.bg_selector.map(self.frame_count // self.synopsis_length * self.input_frame_count)
 
+        tubes_marked_for_deletion = set()
         for active_tube in self.active_tubes:
             # Get tube partial frame to be added in the current frame and increment its state
             trackable = active_tube.get_data()[self.activity_tubes_state[active_tube]]
@@ -57,9 +58,12 @@ class Stitcher(AbstractStitcher):
             x2, y2 = trackable.box.lower_right
             frame[y1:y2, x1:x2] = trackable.data
 
-            # Check tube state and remove if all its contents are processed
+            # Check tube state and mark for deletion if all its contents are processed
             if self.activity_tubes_state[active_tube] == active_tube.get_num_frames():
-                self.active_tubes.remove(active_tube)
+                tubes_marked_for_deletion.add(active_tube)
+
+        for marked_tube in tubes_marked_for_deletion:
+            self.active_tubes.remove(marked_tube)
 
         self.frame_count += 1
         return frame
@@ -70,8 +74,8 @@ class Stitcher(AbstractStitcher):
         return True
 
     def next_frame(self) -> Array[np.int]:
-        frame = self.current_frame
-        self.process_frame()
+        frame = np.array(self.current_frame)
+        self.current_frame = self.process_frame()
         return frame
 
     def _set_synopsis_length(self):
