@@ -68,7 +68,7 @@ class Master:
             if frame_count % 100 == 0:
                 print("number of frames ", frame_count)
 
-            if frame_count == 3000:
+            if frame_count == 10000:
                 self.construct_synopsis(writer, frame_count)
                 break
 

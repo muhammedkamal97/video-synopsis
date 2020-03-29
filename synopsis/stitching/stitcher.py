@@ -45,7 +45,7 @@ class Stitcher(AbstractStitcher):
             self.active_tubes.add(new_tube)
             self.activity_tubes_state[new_tube] = 0
 
-        frame = self.bg_selector.map(self.frame_count // self.synopsis_length * self.input_frame_count)
+        frame = self.bg_selector.map(max(10, int(self.frame_count / self.synopsis_length * self.input_frame_count)))
 
         tubes_marked_for_deletion = set()
         for active_tube in self.active_tubes:
