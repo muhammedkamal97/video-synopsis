@@ -11,4 +11,5 @@ class BGExtractor(AbstractBGExtractor):
         
     def extract_background(self, frame: Array[np.int]) -> Array[np.int]:
         fgMask = self.backSub.apply(frame)
-        return self.backSub.getBackgroundImage();
+        return self.backSub.getBackgroundImage()
+    pass

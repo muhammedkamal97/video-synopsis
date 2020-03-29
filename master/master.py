@@ -1,5 +1,6 @@
 import numpy as np
 from nptyping import Array
+import cv2 as cv
 from cv2 import VideoCapture, VideoWriter
 from background.extraction.abstact_bg_extractor import AbstractBGExtractor
 from background.selection.abstract_bg_selector import AbstractBGSelector
@@ -59,24 +60,29 @@ class Master:
             frame_count += 1
             
             # frame = self.preprocessor.process(frame)
-
             if frame is None:
                 continue
 
             self.process_frame(frame)
+
+            if frame_count % 100 == 0:
+                print("number of frames ", frame_count)
+
             if frame_count % 1000 == 0:
-                print('frame passed', frame_count)
+                self.construct_synopsis(writer, frame_count)
+                break
 
             # if self.chop_synopsis():
             #     self.construct_synopsis(writer)
             
-            # if cv.waitKey(1) == ord('q'):
+            # if cv.waitKey(100) == ord('q'):
             #     self.construct_synopsis(writer)
             #     break
 
     def model_background(self, frame: Array[np.int], frame_count: int):
         bg_frame = self.bg_extractor.extract_background(frame)
         self.bg_selector.consume(bg_frame, frame_count)
+        pass
 
     def process_frame(self, frame: Array[np.int]):
         detected_boxes = self.object_detector.detect(frame)
