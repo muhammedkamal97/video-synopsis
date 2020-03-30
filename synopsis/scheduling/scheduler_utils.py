@@ -43,8 +43,8 @@ def do_activities_collide(act1: ActivityTube, act2: ActivityTube, start_frame: i
     """
     for i in range(min([act1.get_num_frames() - start_frame, act2.get_num_frames()])):
         if do_boxes_overlap(act1.get_data()[start_frame + i].box, act2.get_data()[i].box):
-            return False
-    return True
+            return True
+    return False
 
 
 def get_uncollide_start_frame(act1: ActivityTube, act2: ActivityTube) -> int:
@@ -62,7 +62,7 @@ def get_uncollide_start_frame(act1: ActivityTube, act2: ActivityTube) -> int:
     int
         The number of frame to start the second activity.
     """
-    for start_frame in range(act1.get_num_frames()):
-        if not do_activities_collide(act1, act2, start_frame):
-            return start_frame
-    return start_frame + 1
+    for cur_frame in range(act1.get_num_frames()):
+        if not do_activities_collide(act1, act2, cur_frame):
+            return cur_frame
+    return cur_frame + 1
