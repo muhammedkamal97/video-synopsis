@@ -93,3 +93,6 @@ modules.xml
 venv/
 
 *.mp4
+*.avi
+*.jpg
+**/__pycache__
