@@ -1,31 +1,42 @@
 import numpy as np
-from nptyping import Array
 import cv2 as cv
-from skimage.measure import compare_ssim
-from background.extraction.abstract_bg_selector import AbstractBGSelector
+from nptyping import Array
+from skimage.metrics import structural_similarity
+from background.selection.abstract_bg_selector import AbstractBGSelector
+
 
 class BGSelector(AbstractBGSelector):
-   
-    background_mapper = {}
-    list_of_bgs = []
-    is_first_frame = True
-    count = 0 
+
+    def __init__(self):
+        self.background_mapper = {}
+        self.list_of_bgs = []
+        self.is_first_frame = True
+        self.count = 0
+        self.top_frame = None
 
     def consume(self, background_frame: Array[np.int], frame_no: int):
+
+        resized_image_curr = cv.resize(background_frame, (100, 100))
         
-        if is_first_frame:
-            background_mapper[frame_no] = count
-            list_of_bgs.append(background_frame)
-            count += 1
-            is_first_frame = False
-        else :
-            (score, diff) = compare_ssim(background_frame, list_of_bgs[count-1], full = True,  multichannel=True)
-            if score >= 0.75: # to be tunned
-                background_mapper[frame_no] = count - 1
-            else :
-                background_mapper[frame_no] = count
-                list_of_bgs.append(background_frame)
-                count +=1
-        
+        if self.is_first_frame:
+            self.background_mapper[frame_no] = self.count
+            self.list_of_bgs.append(background_frame)
+            self.count += 1
+            self.is_first_frame = False
+            self.top_frame = resized_image_curr
+        else:
+            (score, diff) = structural_similarity(
+                resized_image_curr, self.top_frame, full=True, multichannel=True)
+            if score >= 0.8:  # to be tuned
+                self.background_mapper[frame_no] = self.count - 1
+            else:
+                self.background_mapper[frame_no] = self.count
+                self.list_of_bgs.append(background_frame)
+                self.count += 1
+                self.top_frame = resized_image_curr
+
     def map(self, frame_no: int) -> Array[np.int]:
-        return list_of_bgs[background_mapper[frame_no]]
+        return self.list_of_bgs[self.background_mapper[frame_no]]
+    
+    def clear(self):
+        self.__init__()

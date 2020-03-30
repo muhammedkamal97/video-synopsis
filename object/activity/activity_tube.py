@@ -9,7 +9,7 @@ class ActivityTube:
             trackables = []
         self.__data = list(trackables)
 
-    def get_data(self):
+    def get_data(self) -> List[ObjectTrackable]:
         return self.__data
 
     def get_num_frames(self) -> int:

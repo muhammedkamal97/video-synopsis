@@ -2,7 +2,6 @@ import numpy as np
 from nptyping import Array
 import cv2 as cv
 from cv2 import VideoCapture, VideoWriter
-
 from background.extraction.abstact_bg_extractor import AbstractBGExtractor
 from background.selection.abstract_bg_selector import AbstractBGSelector
 from object.activity.activity_aggreagator import ActivityAggregator
@@ -30,11 +29,11 @@ class Master:
     MODULES = [
         'bg_extractor',
         'bg_selector',
-        'preprocessor',
+        # 'preprocessor',
         'object_detector',
         'object_tracker',
         'activity_aggregator',
-        'chopper',
+        # 'chopper',
         'scheduler',
         'stitcher'
     ]
@@ -49,29 +48,41 @@ class Master:
         if not writer.isOpened():
             raise Exception("Writer not open")
 
+        frame_count = 0
         while True:
             ret, frame = capture.read()
             if not ret:
                 self.construct_synopsis(writer)
                 break
 
-            self.model_background(frame)
-
-            frame = self.preprocessor.process(frame)
+            self.model_background(frame, frame_count)
+            
+            frame_count += 1
+            
+            # frame = self.preprocessor.process(frame)
             if frame is None:
                 continue
 
             self.process_frame(frame)
-            if self.chop_synopsis():
-                self.construct_synopsis(writer)
 
-            if cv.waitKey(1) == ord('q'):
-                self.construct_synopsis(writer)
+            if frame_count % 100 == 0:
+                print("number of frames ", frame_count)
+
+            if frame_count == 10000:
+                self.construct_synopsis(writer, frame_count)
                 break
 
-    def model_background(self, frame: Array[np.int]):
+            # if self.chop_synopsis():
+            #     self.construct_synopsis(writer)
+            
+            # if cv.waitKey(100) == ord('q'):
+            #     self.construct_synopsis(writer)
+            #     break
+
+    def model_background(self, frame: Array[np.int], frame_count: int):
         bg_frame = self.bg_extractor.extract_background(frame)
-        self.bg_selector.consume(bg_frame)
+        self.bg_selector.consume(bg_frame, frame_count)
+        pass
 
     def process_frame(self, frame: Array[np.int]):
         detected_boxes = self.object_detector.detect(frame)
@@ -81,14 +92,18 @@ class Master:
     def chop_synopsis(self):
         self.chopper.to_chop(self.activity_aggregator)
 
-    def construct_synopsis(self, writer: VideoWriter):
+    # TODO: use a separate data structure for background frames with stitcher
+    def construct_synopsis(self, writer: VideoWriter, frame_count: int):
         activity_tubes = self.activity_aggregator.get_activity_tubes()
         schedule = self.scheduler.schedule(activity_tubes)
-        # TODO: pass background selector to stitcher?
-        self.stitcher.initialize(activity_tubes, schedule)
+        self.stitcher.initialize(activity_tubes, schedule, self.bg_selector, frame_count)
+
+        print(len(activity_tubes))
+        print(schedule)
 
         while self.stitcher.has_next_frame():
-            writer.write(self.stitcher.next_frame())
+            n = self.stitcher.next_frame()
+            writer.write(n)
 
         self.activity_aggregator.clear()
-        # TODO: clear background selector?
+        self.bg_selector.clear()

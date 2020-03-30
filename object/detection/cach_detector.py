@@ -3,6 +3,7 @@ import json
 import os
 from object.detection.abstract_object_detector import *
 
+
 class CachDetector(AbstractObjectDetector):
     
     def __init__(self,arg):
@@ -16,6 +17,6 @@ class CachDetector(AbstractObjectDetector):
         if str(self.frame_num) not in self.detections:
             return None 
         for box in self.detections[str(self.frame_num)]:
-            boxes.append(BoundingBox(box['upper_left'],box['lower_right']))
+            boxes.append(BoundingBox(box['upper_left'], box['lower_right']))
         self.frame_num += 1
         return boxes
