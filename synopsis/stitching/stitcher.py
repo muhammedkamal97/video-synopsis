@@ -59,6 +59,11 @@ class Stitcher(AbstractStitcher):
             x2, y2 = trackable.box.lower_right
             frame[y1:y2, x1:x2] = trackable.data
 
+            center = int((x1 + x2) / 2) - 10, int((y1 + y2) / 2)
+            cv.putText(frame, str(self.activity_tubes.index(active_tube)), center, cv.FONT_HERSHEY_PLAIN, 3,(0, 0, 0), 5, cv.LINE_4)
+            cv.putText(frame, str(self.activity_tubes.index(active_tube)), center, cv.FONT_HERSHEY_PLAIN, 3, (255, 255, 255), 4, cv.LINE_4)
+            cv.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), thickness=2)
+
             # Check tube state and mark for deletion if all its contents are processed
             if self.activity_tubes_state[active_tube] == active_tube.get_num_frames():
                 tubes_marked_for_deletion.add(active_tube)

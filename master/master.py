@@ -98,9 +98,11 @@ class Master:
         schedule = self.scheduler.schedule(activity_tubes)
         self.stitcher.initialize(activity_tubes, schedule, self.bg_selector, frame_count)
 
+        print(len(activity_tubes))
+        print(schedule)
+
         while self.stitcher.has_next_frame():
             n = self.stitcher.next_frame()
-            cv.imwrite("test.jpg", n)
             writer.write(n)
 
         self.activity_aggregator.clear()
