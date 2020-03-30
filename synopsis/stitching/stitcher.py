@@ -9,6 +9,7 @@ from object.activity.activity_tube import ActivityTube
 
 from synopsis.stitching.abstract_stitcher import AbstractStitcher
 
+import cv2 as cv
 
 class Stitcher(AbstractStitcher):
     active_tubes: Set[ActivityTube]
@@ -28,7 +29,7 @@ class Stitcher(AbstractStitcher):
         self.activity_tubes_state = {}
         self.active_tubes = set()
 
-        self.activity_schedule = list(zip(schedule, activity_tubes))
+        self.activity_schedule = list(zip(schedule, range(len(activity_tubes)),activity_tubes))
         heapq.heapify(self.activity_schedule)
 
         self.frame_count = 0
@@ -41,11 +42,11 @@ class Stitcher(AbstractStitcher):
             return None
 
         while len(self.activity_schedule) != 0 and self.frame_count == self.activity_schedule[0][0]:  # Mark new tubes to be active
-            _, new_tube = heapq.heappop(self.activity_schedule)
+            _, __, new_tube = heapq.heappop(self.activity_schedule)
             self.active_tubes.add(new_tube)
             self.activity_tubes_state[new_tube] = 0
 
-        frame = self.bg_selector.map(max(10, int(self.frame_count / self.synopsis_length * self.input_frame_count)))
+        frame = np.array(self.bg_selector.map(max(10, int(self.frame_count / self.synopsis_length * self.input_frame_count))))
 
         tubes_marked_for_deletion = set()
         for active_tube in self.active_tubes:
