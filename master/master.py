@@ -58,7 +58,7 @@ class Master:
             try:
                 ret, frame = capture.read()
                 if not ret:
-                    self.construct_synopsis(writer)
+                    self.construct_synopsis(writer, frame_count)
                     break
 
                 self.model_background(frame, frame_count)
