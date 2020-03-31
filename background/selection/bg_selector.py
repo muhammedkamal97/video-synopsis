@@ -14,7 +14,7 @@ class BGSelector(AbstractBGSelector):
         self.count = 0
         self.top_frame = None
 
-    def consume(self, background_frame: Array[np.int], frame_no: int):
+    def consume(self, background_frame: Array[np.uint8], frame_no: int):
 
         resized_image_curr = cv.resize(background_frame, (100, 100))
         
@@ -35,7 +35,7 @@ class BGSelector(AbstractBGSelector):
                 self.count += 1
                 self.top_frame = resized_image_curr
 
-    def map(self, frame_no: int) -> Array[np.int]:
+    def map(self, frame_no: int) -> Array[np.uint8]:
         return self.list_of_bgs[self.background_mapper[frame_no]]
     
     def clear(self):

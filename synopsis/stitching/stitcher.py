@@ -17,7 +17,7 @@ class Stitcher(AbstractStitcher):
     activity_schedule: List[Tuple[int, ActivityTube]]
     frame_count: int
     input_frame_count: int
-    current_frame: Array[np.int]
+    current_frame: Array[np.uint8]
 
     def initialize(self, activity_tubes: List[ActivityTube], schedule: List[int],
                    bg_selector: AbstractBGSelector, input_frame_count) -> NoReturn:
@@ -37,7 +37,7 @@ class Stitcher(AbstractStitcher):
 
         self.current_frame = self.process_frame()
 
-    def process_frame(self) -> Optional[Array[np.int]]:
+    def process_frame(self) -> Optional[Array[np.uint8]]:
         if self.frame_count == self.synopsis_length:
             return None
 
@@ -81,7 +81,7 @@ class Stitcher(AbstractStitcher):
             return False
         return True
 
-    def next_frame(self) -> Array[np.int]:
+    def next_frame(self) -> Array[np.uint8]:
         frame = np.array(self.current_frame)
         self.current_frame = self.process_frame()
         return frame

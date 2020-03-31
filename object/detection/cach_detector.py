@@ -12,7 +12,7 @@ class CachDetector(AbstractObjectDetector):
             self.detections = json.load(json_file)
         self.frame_num = 1
         
-    def detect(self, frame: Array[np.int]) -> List[BoundingBox]:
+    def detect(self, frame: Array[np.uint8]) -> List[BoundingBox]:
         boxes = []
         if str(self.frame_num) not in self.detections:
             return None 

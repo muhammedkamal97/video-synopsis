@@ -12,7 +12,7 @@ class YoloDetector(AbstractObjectDetector):
 
 
 
-	def detect(self, frame: Array[np.int]) -> List[BoundingBox]:
+	def detect(self, frame: Array[np.uint8]) -> List[BoundingBox]:
 		fr = Image(frame)
 		results = self.net.detect(fr)
 		del fr

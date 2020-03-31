@@ -9,8 +9,8 @@ class BGExtractor(AbstractBGExtractor):
     def __init__(self):
         self.backSub = cv.createBackgroundSubtractorMOG2()
         self.i = 0
-        
-    def extract_background(self, frame: Array[np.int]) -> Array[np.int]:
+
+    def extract_background(self, frame: Array[np.uint8]) -> Array[np.uint8]:
         fgMask = self.backSub.apply(frame)
         return self.backSub.getBackgroundImage()
     pass

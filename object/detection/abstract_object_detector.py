@@ -9,5 +9,5 @@ from object.activity.bounding_box import BoundingBox
 class AbstractObjectDetector(ABC):
 
     @abstractmethod
-    def detect(self, frame: Array[np.int]) -> List[BoundingBox]:
+    def detect(self, frame: Array[np.uint8]) -> List[BoundingBox]:
         pass

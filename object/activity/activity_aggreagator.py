@@ -12,7 +12,7 @@ class ActivityAggregator:
     def __init__(self):
         self.__activity_tubes = {}
 
-    def aggregate(self, frame: Array[np.int], detected_boxes: List[BoundingBox], object_ids: List[int]):
+    def aggregate(self, frame: Array[np.uint8], detected_boxes: List[BoundingBox], object_ids: List[int]):
 
         for obj_id, box in list(zip(object_ids, detected_boxes)):
             if obj_id not in self.__activity_tubes:
@@ -21,11 +21,7 @@ class ActivityAggregator:
             # get box
             x1, y1 = box.upper_left
             x2, y2 = box.lower_right
-            data = frame[y1:y2, x1:x2]
-            info = np.iinfo(data.dtype)
-            data = data.astype(np.float64) / info.max
-            data = 255 * data
-            data = data.astype(np.uint8)
+            data = frame[y1:y2, x1:x2].astype(np.uint8)
             self.__activity_tubes[obj_id].add_trackable(ObjectTrackable(box, data))
 
     def get_activity_tubes(self):

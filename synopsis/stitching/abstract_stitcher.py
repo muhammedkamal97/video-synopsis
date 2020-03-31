@@ -29,6 +29,6 @@ class AbstractStitcher(ABC):
         pass
 
     @abstractmethod
-    def next_frame(self) -> Array[np.int]:
+    def next_frame(self) -> Array[np.uint8]:
         pass
 

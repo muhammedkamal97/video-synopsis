@@ -90,12 +90,12 @@ class Master:
                 self.construct_synopsis(writer, frame_count)
                 raise
 
-    def model_background(self, frame: Array[np.int], frame_count: int):
+    def model_background(self, frame: Array[np.uint8], frame_count: int):
         bg_frame = self.bg_extractor.extract_background(frame)
         self.bg_selector.consume(bg_frame, frame_count)
         pass
 
-    def process_frame(self, frame: Array[np.int]):
+    def process_frame(self, frame: Array[np.uint8]):
         detected_boxes = self.object_detector.detect(frame)
         object_ids = self.object_tracker.track(frame, detected_boxes)
         self.activity_aggregator.aggregate(frame, detected_boxes, object_ids)
