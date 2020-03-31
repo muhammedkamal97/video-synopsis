@@ -71,6 +71,25 @@ def get_uncollide_start_frame(act1: ActivityTube, act2: ActivityTube) -> int:
     return start_frame + 1
 
 
+def can_put_activity_tube_in_frame(act: ActivityTube, frame_num: int,
+                                   activity_tubes: List[ActivityTube], start_frames: List[int]) -> bool:
+    """
+    Check if the "act" activity tube can be put in frame "frame_num" without itersecting with other activity tubes
+    :param act: The activity tube to be checked.
+    :param frame_num: The frame number that the activity tube "act" will start from.
+    :param activity_tubes: The list of activity tubes to be scheduled.
+    :param start_frames: List of integers with same length as the activity_tubes list.
+            Each integer represents the starting frame of the activity tube -with the same index- in the synopsis video.
+    :return: boolean value : true if the activity tube "act" can be put in frame "frame_num" without any intersection
+        with other activity tubes starting at "start_frames"
+    :rtype: bool
+    """
+    for a, f in zip(activity_tubes, start_frames):
+        if do_activities_collide(a, act, frame_num - f):
+            return False
+    return True
+
+
 def get_video_length(activity_tubes: List[ActivityTube], start_frames: List[int]) -> int:
     """Get the output video length in frames.
 
@@ -98,7 +117,7 @@ def compute_total_intersection(activity_tubes: List[ActivityTube], start_frames:
     Compute the total intersection in a video.
     Total intersection the sum of intersected pixels between each two boxes.
 
-    :param activity_tubes:
+    :param activity_tubes: the activity tubes in the video
     :param start_frames:
     :return: total intersection in the video.
     :rtype: int
@@ -111,12 +130,12 @@ def compute_total_intersection(activity_tubes: List[ActivityTube], start_frames:
     for i in range(len(activity_tubes)):
         activity_tube = activity_tubes[i]
         for j in range(activity_tube.get_num_frames()):
-            frame_boxes[start_frames[i] + j].append(activity_tube.get_data()[j].bounding_box)
+            frame_boxes[start_frames[i] + j].append(activity_tube.get_data()[j].box)
 
     # Compute intersections
     intersections = 0
     for boxes in frame_boxes:
-        for box1, box2 in itertools.combinations(boxes,2):
+        for box1, box2 in itertools.combinations(boxes, 2):
             intersections += compute_boxes_intersection(box1, box2)
 
     return intersections
