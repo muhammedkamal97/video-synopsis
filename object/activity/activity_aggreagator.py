@@ -22,6 +22,10 @@ class ActivityAggregator:
             x1, y1 = box.upper_left
             x2, y2 = box.lower_right
             data = frame[y1:y2, x1:x2]
+            info = np.iinfo(data.dtype)
+            data = data.astype(np.float64) / info.max
+            data = 255 * data
+            data = data.astype(np.uint8)
             self.__activity_tubes[obj_id].add_trackable(ObjectTrackable(box, data))
 
     def get_activity_tubes(self):

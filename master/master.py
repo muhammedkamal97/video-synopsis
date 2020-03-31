@@ -12,6 +12,7 @@ from synopsis.chopping.abstract_synopsis_chopper import AbstractSynopsisChopper
 from synopsis.scheduling.abstract_scheduler import AbstractScheduler
 from synopsis.stitching.abstract_stitcher import AbstractStitcher
 
+from object.tracking.sort_tracker import SortTracker
 
 class Master:
     bg_extractor: AbstractBGExtractor
@@ -64,11 +65,12 @@ class Master:
                 continue
 
             self.process_frame(frame)
+            del frame
 
-            if frame_count % 100 == 0:
+            if frame_count % 1000 == 0:
                 print("number of frames ", frame_count)
 
-            if frame_count == 10000:
+            if frame_count == 11000:
                 self.construct_synopsis(writer, frame_count)
                 break
 
