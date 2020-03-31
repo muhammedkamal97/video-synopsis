@@ -12,7 +12,7 @@ from synopsis.chopping.abstract_synopsis_chopper import AbstractSynopsisChopper
 from synopsis.scheduling.abstract_scheduler import AbstractScheduler
 from synopsis.stitching.abstract_stitcher import AbstractStitcher
 
-from object.tracking.sort_tracker import SortTracker
+import os, psutil
 
 class Master:
     bg_extractor: AbstractBGExtractor
@@ -49,37 +49,44 @@ class Master:
         if not writer.isOpened():
             raise Exception("Writer not open")
 
+        pid = os.getpid()
+        print("pid=", pid)
+        ps = psutil.Process(pid)
+
         frame_count = 0
         while True:
-            ret, frame = capture.read()
-            if not ret:
-                self.construct_synopsis(writer)
-                break
+            try:
+                ret, frame = capture.read()
+                if not ret:
+                    self.construct_synopsis(writer)
+                    break
 
-            self.model_background(frame, frame_count)
-            
-            frame_count += 1
-            
-            # frame = self.preprocessor.process(frame)
-            if frame is None:
-                continue
+                self.model_background(frame, frame_count)
 
-            self.process_frame(frame)
-            del frame
+                frame_count += 1
 
-            if frame_count % 1000 == 0:
-                print("number of frames ", frame_count)
+                # frame = self.preprocessor.process(frame)
+                if frame is None:
+                    continue
 
-            if frame_count == 11000:
+                self.process_frame(frame)
+                del frame
+
+                if frame_count % 1000 == 0:
+                    print("number of frames ", frame_count)
+                    print("memory: ", ps.memory_info().rss/(1024*1024), "MB")
+
+                if frame_count == 11000:
+                    self.construct_synopsis(writer, frame_count)
+                    break
+
+                # if self.chop_synopsis():
+                #     self.construct_synopsis(writer)
+
+            except KeyboardInterrupt:
+                print("Handling KeyboardInterrupt. Generating Synopsis...")
                 self.construct_synopsis(writer, frame_count)
-                break
-
-            # if self.chop_synopsis():
-            #     self.construct_synopsis(writer)
-            
-            # if cv.waitKey(100) == ord('q'):
-            #     self.construct_synopsis(writer)
-            #     break
+                raise
 
     def model_background(self, frame: Array[np.int], frame_count: int):
         bg_frame = self.bg_extractor.extract_background(frame)

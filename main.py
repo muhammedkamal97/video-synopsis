@@ -12,7 +12,7 @@ from synopsis.stitching.stitcher import Stitcher
 from master.master import Master
 
 
-cap = VideoCapture('12_47.mp4')
+cap = VideoCapture('../12_47.mp4')
 # out = VideoWriter('output.mp4', 0x7634706d, 10, (400, 400))
 width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
