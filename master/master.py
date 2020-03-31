@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 from nptyping import Array
 import cv2 as cv
@@ -52,13 +54,15 @@ class Master:
         pid = os.getpid()
         print("pid=", pid)
         ps = psutil.Process(pid)
+        start_time = time.time()
 
         frame_count = 0
         while True:
             try:
                 ret, frame = capture.read()
                 if not ret:
-                    self.construct_synopsis(writer)
+                    print("time from start: %.2f minutes" % ((time.time()-start_time)/60))
+                    self.construct_synopsis(writer, frame_count)
                     break
 
                 self.model_background(frame, frame_count)
@@ -73,12 +77,10 @@ class Master:
                 del frame
 
                 if frame_count % 1000 == 0:
+                    print("--------- Checkpoint -----------")
                     print("number of frames ", frame_count)
-                    print("memory: ", ps.memory_info().rss/(1024*1024), "MB")
-
-                if frame_count == 11000:
-                    self.construct_synopsis(writer, frame_count)
-                    break
+                    print("memory: ", int(ps.memory_info().rss/(1024*1024)), "MB")
+                    print("time from start: %.2f minutes" % ((time.time()-start_time)/60))
 
                 # if self.chop_synopsis():
                 #     self.construct_synopsis(writer)
