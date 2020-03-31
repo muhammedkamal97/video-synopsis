@@ -54,6 +54,7 @@ class Master:
         pid = os.getpid()
         print("pid=", pid)
         ps = psutil.Process(pid)
+
         start_time = time.time()
 
         frame_count = 0
@@ -68,19 +69,21 @@ class Master:
                 self.model_background(frame, frame_count)
 
                 frame_count += 1
-
-                # frame = self.preprocessor.process(frame)
-                if frame is None:
-                    continue
-
-                self.process_frame(frame)
-                del frame
-
+                
                 if frame_count % 1000 == 0:
                     print("--------- Checkpoint -----------")
                     print("number of frames ", frame_count)
                     print("memory: ", int(ps.memory_info().rss/(1024*1024)), "MB")
                     print("time from start: %.2f minutes" % ((time.time()-start_time)/60))
+
+                # frame = self.preprocessor.process(frame)
+                if frame is None:
+                    continue
+
+                self.process_frame(frame, frame_count)
+                del frame
+
+                
 
                 # if self.chop_synopsis():
                 #     self.construct_synopsis(writer)
@@ -95,8 +98,8 @@ class Master:
         self.bg_selector.consume(bg_frame, frame_count)
         pass
 
-    def process_frame(self, frame: Array[np.int]):
-        detected_boxes = self.object_detector.detect(frame)
+    def process_frame(self, frame: Array[np.int],frame_count=1):
+        detected_boxes = self.object_detector.detect(frame, frame_count)
         object_ids = self.object_tracker.track(frame, detected_boxes)
         self.activity_aggregator.aggregate(frame, detected_boxes, object_ids)
 

@@ -10,13 +10,11 @@ class CachDetector(AbstractObjectDetector):
         super(CachDetector, self).__init__()
         with open(os.path.sep.join(['cach_detector', arg['video_name']])) as json_file:
             self.detections = json.load(json_file)
-        self.frame_num = 1
         
-    def detect(self, frame: Array[np.int]) -> List[BoundingBox]:
+    def detect(self, frame: Array[np.int], frame_count) -> List[BoundingBox]:
         boxes = []
-        if str(self.frame_num) not in self.detections:
+        if str(frame_count) not in self.detections:
             return None 
-        for box in self.detections[str(self.frame_num)]:
+        for box in self.detections[str(frame_count)]:
             boxes.append(BoundingBox(box['upper_left'], box['lower_right']))
-        self.frame_num += 1
         return boxes
