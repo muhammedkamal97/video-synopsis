@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import numpy as np
 from typing import List, NoReturn
 from nptyping import Array
@@ -21,7 +23,7 @@ class AbstractStitcher(ABC):
 
     @abstractmethod
     def initialize(self, activity_tubes: List[ActivityTube], schedule: List[int], bg_selector: AbstractBGSelector
-                   , input_frame_count: int) -> NoReturn:
+                   , input_frame_count: int, input_fps: int, timestamp: datetime) -> NoReturn:
         pass
 
     @abstractmethod

@@ -4,7 +4,8 @@ from object.activity.object_trackable import ObjectTrackable
 
 
 class ActivityTube:
-    def __init__(self, trackables: List[ObjectTrackable] = None):
+    def __init__(self, start_frame, trackables: List[ObjectTrackable] = None):
+        self.start_frame = start_frame
         if trackables is None:
             trackables = []
         self.__data = list(trackables)

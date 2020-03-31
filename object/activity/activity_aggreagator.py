@@ -12,11 +12,11 @@ class ActivityAggregator:
     def __init__(self):
         self.__activity_tubes = {}
 
-    def aggregate(self, frame: Array[np.uint8], detected_boxes: List[BoundingBox], object_ids: List[int]):
+    def aggregate(self, frame: Array[np.uint8], detected_boxes: List[BoundingBox], object_ids: List[int], frame_count: int):
 
         for obj_id, box in list(zip(object_ids, detected_boxes)):
             if obj_id not in self.__activity_tubes:
-                self.__activity_tubes[obj_id] = ActivityTube()
+                self.__activity_tubes[obj_id] = ActivityTube(frame_count)
 
             # get box
             x1, y1 = box.upper_left
