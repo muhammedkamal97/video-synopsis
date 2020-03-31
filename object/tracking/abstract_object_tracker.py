@@ -14,5 +14,5 @@ def map_detected_box_to_rectangle(detected_box: BoundingBox):
 class AbstractObjectTracker(ABC):
 
 	@abstractmethod
-	def track(self, frame: Array[np.int], detected_boxes: List[BoundingBox]) -> List[int]:
+	def track(self, frame: Array[np.uint8], detected_boxes: List[BoundingBox]) -> List[int]:
 		pass

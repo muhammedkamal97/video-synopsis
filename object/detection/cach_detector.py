@@ -11,7 +11,8 @@ class CachDetector(AbstractObjectDetector):
         with open(os.path.sep.join(['cach_detector', arg['video_name']])) as json_file:
             self.detections = json.load(json_file)
         
-    def detect(self, frame: Array[np.int], frame_count) -> List[BoundingBox]:
+
+    def detect(self, frame: Array[np.uint8], frame_count) -> List[BoundingBox]:
         boxes = []
         if str(frame_count) not in self.detections:
             return None 
