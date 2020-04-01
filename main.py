@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import cv2 as cv
 from cv2 import VideoCapture, VideoWriter
 from background.extraction.bg_extractor import BGExtractor
@@ -13,13 +15,15 @@ from master.master import Master
 
 
 cap = VideoCapture('../12_47.mp4')
-# out = VideoWriter('output.mp4', 0x7634706d, 10, (400, 400))
+
+
 width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
-# fps = cap.get(cv.CAP_PROP_XI_FRAMERATE)
+fps = cap.get(cv.CAP_PROP_FPS)
 
 codec = cv.VideoWriter_fourcc('M', 'J', 'P', 'G')
-out = cv.VideoWriter('output.avi', codec, 25, (width, height))
+out = cv.VideoWriter('output.avi', codec, fps, (width, height))
+start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
 
 bg_extractor = BGExtractor()
 bg_selector = BGSelector()
@@ -44,5 +48,5 @@ slaves = {
 }
 
 master = Master(slaves)
-master.run(cap, out)
+master.run(cap, out, start_time)
 

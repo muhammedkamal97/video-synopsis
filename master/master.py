@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 
 import numpy as np
 from nptyping import Array
@@ -16,6 +17,7 @@ from synopsis.stitching.abstract_stitcher import AbstractStitcher
 
 import os, psutil
 
+
 class Master:
     bg_extractor: AbstractBGExtractor
     bg_selector: AbstractBGSelector
@@ -28,6 +30,8 @@ class Master:
     chopper: AbstractSynopsisChopper
     scheduler: AbstractScheduler
     stitcher: AbstractStitcher
+
+    start_time: datetime
 
     MODULES = [
         'bg_extractor',
@@ -44,37 +48,41 @@ class Master:
     def __init__(self, slaves: dict):
         for m in Master.MODULES:
             setattr(self, m, slaves[m])
+        self.fps = 0
 
-    def run(self, capture: VideoCapture, writer: VideoWriter):
+    def run(self, capture: VideoCapture, writer: VideoWriter, start_time: datetime):
         if not capture.isOpened():
             raise Exception("Capture not open")
         if not writer.isOpened():
             raise Exception("Writer not open")
 
+        self.fps = capture.get(cv.CAP_PROP_FPS)
+        self.start_time = start_time
+
         pid = os.getpid()
         print("pid=", pid)
         ps = psutil.Process(pid)
 
-        start_time = time.time()
+        t = time.time()
 
         frame_count = 0
         while True:
             try:
                 ret, frame = capture.read()
                 if not ret:
-                    print("time from start: %.2f minutes" % ((time.time()-start_time)/60))
-                    self.construct_synopsis(writer, frame_count)
+                    print("time from start: %.2f minutes" % ((time.time() - t) / 60))
+                    self.construct_synopsis(writer, frame_count, start_time)
                     break
 
                 self.model_background(frame, frame_count)
 
                 frame_count += 1
-                
+
                 if frame_count % 1000 == 0:
                     print("--------- Checkpoint -----------")
                     print("number of frames ", frame_count)
-                    print("memory: ", int(ps.memory_info().rss/(1024*1024)), "MB")
-                    print("time from start: %.2f minutes" % ((time.time()-start_time)/60))
+                    print("memory: ", int(ps.memory_info().rss / (1024 * 1024)), "MB")
+                    print("time from start: %.2f minutes" % ((time.time() - start_time) / 60))
 
                 # frame = self.preprocessor.process(frame)
                 if frame is None:
@@ -83,14 +91,18 @@ class Master:
                 self.process_frame(frame, frame_count)
                 del frame
 
-                
+                if frame_count % 1000 == 0:
+                    print("--------- Checkpoint -----------")
+                    print("number of frames ", frame_count)
+                    print("memory: ", int(ps.memory_info().rss / (1024 * 1024)), "MB")
+                    print("time from start: %.2f minutes" % ((time.time() - t) / 60))
 
                 # if self.chop_synopsis():
-                #     self.construct_synopsis(writer)
+                #     self.construct_synopsis(writer, frame_count, start_time)
 
             except KeyboardInterrupt:
                 print("Handling KeyboardInterrupt. Generating Synopsis...")
-                self.construct_synopsis(writer, frame_count)
+                self.construct_synopsis(writer, frame_count, start_time)
                 raise
 
     def model_background(self, frame: Array[np.uint8], frame_count: int):
@@ -98,20 +110,19 @@ class Master:
         self.bg_selector.consume(bg_frame, frame_count)
         pass
 
-    def process_frame(self, frame: Array[np.uint8], frame_count=1):
-        detected_boxes = self.object_detector.detect(frame, frame_count)
+    def process_frame(self, frame: Array[np.uint8], frame_count: int = 1):
+        detected_boxes = self.object_detector.detect(frame)
         object_ids = self.object_tracker.track(frame, detected_boxes)
-        self.activity_aggregator.aggregate(frame, detected_boxes, object_ids)
+        self.activity_aggregator.aggregate(frame, detected_boxes, object_ids, frame_count)
 
     def chop_synopsis(self):
         self.chopper.to_chop(self.activity_aggregator)
 
     # TODO: use a separate data structure for background frames with stitcher
-    def construct_synopsis(self, writer: VideoWriter, frame_count: int):
+    def construct_synopsis(self, writer: VideoWriter, frame_count: int, start_time: datetime):
         activity_tubes = self.activity_aggregator.get_activity_tubes()
         schedule = self.scheduler.schedule(activity_tubes)
-        self.stitcher.initialize(activity_tubes, schedule, self.bg_selector, frame_count)
-
+        self.stitcher.initialize(activity_tubes, schedule, self.bg_selector, frame_count, self.fps, start_time)
         print(len(activity_tubes))
         print(schedule)
 

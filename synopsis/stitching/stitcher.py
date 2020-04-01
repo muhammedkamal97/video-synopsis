@@ -1,4 +1,5 @@
 import heapq
+from datetime import datetime, timedelta
 from typing import List, NoReturn, Set, Dict, Tuple, Optional
 
 import numpy as np
@@ -11,16 +12,19 @@ from synopsis.stitching.abstract_stitcher import AbstractStitcher
 
 import cv2 as cv
 
+
 class Stitcher(AbstractStitcher):
     active_tubes: Set[ActivityTube]
     activity_tubes_state: Dict[ActivityTube, int]
     activity_schedule: List[Tuple[int, ActivityTube]]
     frame_count: int
     input_frame_count: int
+    input_fps: int
+    start_time: datetime
     current_frame: Array[np.uint8]
 
-    def initialize(self, activity_tubes: List[ActivityTube], schedule: List[int],
-                   bg_selector: AbstractBGSelector, input_frame_count) -> NoReturn:
+    def initialize(self, activity_tubes: List[ActivityTube], schedule: List[int], bg_selector: AbstractBGSelector,
+                   input_frame_count: int, input_fps: int, start_time: datetime) -> NoReturn:
         self.activity_tubes = activity_tubes
         self.schedule = schedule
         self.bg_selector = bg_selector
@@ -29,11 +33,13 @@ class Stitcher(AbstractStitcher):
         self.activity_tubes_state = {}
         self.active_tubes = set()
 
-        self.activity_schedule = list(zip(schedule, range(len(activity_tubes)),activity_tubes))
+        self.activity_schedule = list(zip(schedule, range(len(activity_tubes)), activity_tubes))
         heapq.heapify(self.activity_schedule)
 
         self.frame_count = 0
         self.input_frame_count = input_frame_count
+        self.input_fps = input_fps
+        self.start_time = start_time
 
         self.current_frame = self.process_frame()
 
@@ -41,12 +47,14 @@ class Stitcher(AbstractStitcher):
         if self.frame_count == self.synopsis_length:
             return None
 
-        while len(self.activity_schedule) != 0 and self.frame_count == self.activity_schedule[0][0]:  # Mark new tubes to be active
+        while len(self.activity_schedule) != 0 and self.frame_count == self.activity_schedule[0][
+            0]:  # Mark new tubes to be active
             _, __, new_tube = heapq.heappop(self.activity_schedule)
             self.active_tubes.add(new_tube)
             self.activity_tubes_state[new_tube] = 0
 
-        frame = np.array(self.bg_selector.map(max(10, int(self.frame_count / self.synopsis_length * self.input_frame_count))))
+        frame = np.array(
+            self.bg_selector.map(max(10, int(self.frame_count / self.synopsis_length * self.input_frame_count))))
 
         tubes_marked_for_deletion = set()
         for active_tube in self.active_tubes:
@@ -59,9 +67,16 @@ class Stitcher(AbstractStitcher):
             x2, y2 = trackable.box.lower_right
             frame[y1:y2, x1:x2] = trackable.data
 
+            # Compute and attach timestamp
+            center = int((x1 + x2) / 2) - 10, int((y1 + y2) / 2)
+            delta_seconds = (self.activity_tubes_state[active_tube] + active_tube.start_frame) / self.input_fps
+            timestamp = self.start_time + timedelta(0, int(delta_seconds))
+            time_str = str(timestamp.hour).zfill(2) + ":" + str(timestamp.minute).zfill(2)
+            cv.putText(frame, time_str, center, cv.FONT_HERSHEY_PLAIN, 2, (0, 0, 0), 5  , cv.LINE_4)
+            cv.putText(frame, time_str, center, cv.FONT_HERSHEY_PLAIN, 2, (255, 255, 255), 2, cv.LINE_4)
+
             # For debugging
 
-            # center = int((x1 + x2) / 2) - 10, int((y1 + y2) / 2)
             # cv.putText(frame, str(self.activity_tubes.index(active_tube)), center, cv.FONT_HERSHEY_PLAIN, 3,(0, 0, 0), 5, cv.LINE_4)
             # cv.putText(frame, str(self.activity_tubes.index(active_tube)), center, cv.FONT_HERSHEY_PLAIN, 3, (255, 255, 255), 4, cv.LINE_4)
             # cv.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), thickness=2)
