@@ -91,12 +91,6 @@ class Master:
                 self.process_frame(frame, frame_count)
                 del frame
 
-                if frame_count % 1000 == 0:
-                    print("--------- Checkpoint -----------")
-                    print("number of frames ", frame_count)
-                    print("memory: ", int(ps.memory_info().rss / (1024 * 1024)), "MB")
-                    print("time from start: %.2f minutes" % ((time.time() - t) / 60))
-
                 # if self.chop_synopsis():
                 #     self.construct_synopsis(writer, frame_count, start_time)
 
