@@ -111,7 +111,7 @@ class Master:
         pass
 
     def process_frame(self, frame: Array[np.uint8], frame_count: int = 1):
-        detected_boxes = self.object_detector.detect(frame)
+        detected_boxes = self.object_detector.detect(frame, frame_count)
         object_ids = self.object_tracker.track(frame, detected_boxes)
         self.activity_aggregator.aggregate(frame, detected_boxes, object_ids, frame_count)
 
