@@ -82,7 +82,7 @@ class Master:
                     print("--------- Checkpoint -----------")
                     print("number of frames ", frame_count)
                     print("memory: ", int(ps.memory_info().rss / (1024 * 1024)), "MB")
-                    print("time from start: %.2f minutes" % ((time.time() - start_time) / 60))
+                    print("time from start: %.2f minutes" % ((time.time() - t) / 60))
 
                 # frame = self.preprocessor.process(frame)
                 if frame is None:
