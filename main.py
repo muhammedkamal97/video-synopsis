@@ -14,7 +14,7 @@ from synopsis.stitching.stitcher import Stitcher
 from master.master import Master
 
 
-cap = VideoCapture('../12_47.mp4')
+cap = VideoCapture('12_47.mp4')
 
 
 width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
@@ -26,7 +26,7 @@ out = cv.VideoWriter('output.avi', codec, fps, (width, height))
 start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
 
 bg_extractor = BGExtractor()
-bg_selector = BGSelector()
+bg_selector = BGSelector(1000)
 # preprocessor = AbstractPreprocessor()
 object_detector = CachDetector({'video_name': '12_47.json'})
 object_tracker = SortTracker()

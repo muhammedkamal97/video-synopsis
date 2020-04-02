@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 class AbstractBGSelector(ABC):
 
     @abstractmethod
-    def consume(self, background_frame: Array[np.uint8]):
+    def consume(self, background_frame: Array[np.uint8], frame_no: int):
         pass
 
     @abstractmethod

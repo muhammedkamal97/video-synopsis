@@ -22,7 +22,7 @@ codec = cv.VideoWriter_fourcc('M', 'J', 'P', 'G')
 out = cv.VideoWriter('output.avi', codec, 25, (width, height))
 
 bg_extractor = BGExtractor()
-bg_selector = BGSelector()
+bg_selector = BGSelector(1000)
 # preprocessor = AbstractPreprocessor()
 object_detector = YoloDetector(None)
 object_tracker = SortTracker()

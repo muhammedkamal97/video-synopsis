@@ -91,6 +91,10 @@ class Master:
                 self.process_frame(frame, frame_count)
                 del frame
 
+                if frame_count == 10001:
+                    self.construct_synopsis(writer, frame_count, start_time)
+                    break
+
                 # if self.chop_synopsis():
                 #     self.construct_synopsis(writer, frame_count, start_time)
 
