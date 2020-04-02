@@ -10,6 +10,7 @@ from synopsis.chopping.abstract_synopsis_chopper import AbstractSynopsisChopper
 from synopsis.scheduling.basic_scheduler import BasicScheduler
 from synopsis.stitching.stitcher import Stitcher
 from master.master import Master
+from datetime import datetime
 
 
 cap = VideoCapture('12_47.mp4')
@@ -20,8 +21,9 @@ height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 
 codec = cv.VideoWriter_fourcc('M', 'J', 'P', 'G')
 out = cv.VideoWriter('output.avi', codec, 25, (width, height))
+start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
 
-bg_extractor = BGExtractor()
+bg_extractor = BGExtractor(1000)
 bg_selector = BGSelector(1000)
 # preprocessor = AbstractPreprocessor()
 object_detector = YoloDetector(None)
@@ -44,5 +46,5 @@ slaves = {
 }
 
 master = Master(slaves)
-master.run(cap, out)
+master.run(cap, out, start_time)
 

@@ -25,7 +25,7 @@ codec = cv.VideoWriter_fourcc('M', 'J', 'P', 'G')
 out = cv.VideoWriter('output.avi', codec, fps, (width, height))
 start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
 
-bg_extractor = BGExtractor()
+bg_extractor = BGExtractor(1000)
 bg_selector = BGSelector(1000)
 # preprocessor = AbstractPreprocessor()
 object_detector = CachDetector({'video_name': '12_47.json'})
