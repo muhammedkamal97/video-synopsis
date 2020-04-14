@@ -9,7 +9,8 @@ class SortTracker(AbstractObjectTracker):
 		self.__tracker = Sort()
 
 	def track(self, frame: Array[np.uint8], detected_boxes: List[BoundingBox]) -> List[int]:
-		rectangles = list(map(map_detected_box_to_rectangle, detected_boxes))
+		rectangles = [np.array([detected_box.upper_left[0], detected_box.upper_left[1], detected_box.lower_right[0],
+								detected_box.lower_right[1]]) for detected_box in detected_boxes]
 		tracked_objects = self.__tracker.update(np.array(rectangles))
 		tracked_objects_ids = tracked_objects[:, 4]
 		return tracked_objects_ids
