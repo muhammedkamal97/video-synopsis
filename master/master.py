@@ -120,9 +120,12 @@ class Master:
         print(len(activity_tubes))
         print(schedule)
 
+        t1 = time.time()
         while self.stitcher.has_next_frame():
             n = self.stitcher.next_frame()
             writer.write(n)
+        print("time from start: %.2f minutes" % ((time.time() - t1) / 60))
+
 
         self.activity_aggregator.clear()
         self.bg_selector.clear()
