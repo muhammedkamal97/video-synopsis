@@ -18,4 +18,4 @@ class CachDetector(AbstractObjectDetector):
             return None 
         for box in self.detections[str(frame_count)]:
             boxes.append(BoundingBox(box['upper_left'], box['lower_right']))
-        return boxes
+        return merge_boxes(boxes)
