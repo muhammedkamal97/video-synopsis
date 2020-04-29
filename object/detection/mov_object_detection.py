@@ -18,7 +18,7 @@ class movObjectDetector(AbstractObjectDetector):
         for contour in contours:
             (x, y, w, h) = cv2.boundingRect(contour)
 
-            if cv2.contourArea(contour) < 700:
+            if cv2.contourArea(contour) < 900:
                 continue
             boxes.append(BoundingBox((x,y),(x+w,y+h)))
         del self.prev_frame
