@@ -28,13 +28,13 @@ start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
 bg_extractor = BGExtractor(1000)
 bg_selector = BGSelector(1000)
 # preprocessor = AbstractPreprocessor()
-# object_detector = CachDetector({'video_name': '12_47.json'})
+object_detector = CachDetector({'video_name': '12_47.json'})
 object_tracker = SortTracker()
 activity_aggregator = ActivityAggregator()
 # chopper = AbstractSynopsisChopper()
 scheduler = BasicScheduler()
 stitcher = Stitcher()
-object_detector = movObjectDetector(None)
+#object_detector = movObjectDetector(None)
 slaves = {
     'bg_extractor': bg_extractor,
     'bg_selector': bg_selector,
