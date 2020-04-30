@@ -23,4 +23,4 @@ class movObjectDetector(AbstractObjectDetector):
             boxes.append(BoundingBox((x,y),(x+w,y+h)))
         del self.prev_frame
         self.prev_frame = frame
-        return boxes
+        return merge_boxes(boxes)
