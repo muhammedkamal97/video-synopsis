@@ -8,7 +8,7 @@ def merge_boxes(boxes):
 		merge_happen = False
 		index = 0
 		for i in range(len(que)):
-			if distance(box1,que[i]) < 20000:
+			if distance(box1,que[i]) < 18000:
 				merge_happen = True
 				index = i
 				break
