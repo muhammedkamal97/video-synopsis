@@ -48,8 +48,20 @@ class Stitcher(AbstractStitcher):
         object_frame[np.where(object_frame == 0)] = 1
         temp = back_ground[y1:y2, x1:x2]
         newmask = object_frame - temp
-        newmask[np.where(newmask > 240)] = 0
-        newmask[np.where(newmask < 10)] = 0
+        newmask[np.where(newmask > 235)] = 0
+        newmask[np.where(newmask < 15)] = 0
+        try:
+            # newmask = cv.morphologyEx(newmask, cv.MORPH_TOPHAT, (5, 5))
+            newmask = cv.erode(newmask, (10, 10), 10)
+            # newmask2[np.where(newmask2 >= 200)] = 100
+            # newmask = newmask1 - newmask2
+            # x1_new = int(0.2 * newmask.shape[1])
+            # y1_new = int(0.1 * newmask.shape[0])
+            # x2_new = int(0.8 * newmask.shape[1])
+            # y2_new = int(0.9 * newmask.shape[0])
+            # newmask[y1_new:y2_new, x1_new:x2_new, :] = 255
+        except Exception as e:
+            print(str(e))
         mask = np.zeros(object_frame.shape[:2], np.uint8)
         bgdModel = np.zeros((1, 65), np.float64)
         fgdModel = np.zeros((1, 65), np.float64)
@@ -60,7 +72,7 @@ class Stitcher(AbstractStitcher):
         mask[np.where(newmask != 0)[:2]] = 1
 
         try:
-            mask, bgdModel, fgdModel = cv.grabCut(object_frame, mask, None, bgdModel, fgdModel, 1,
+            mask, bgdModel, fgdModel = cv.grabCut(object_frame, mask, None, bgdModel, fgdModel, 3,
                                                   cv.GC_INIT_WITH_MASK)
             mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype('uint8')
             object_frame = object_frame * mask2[:, :, np.newaxis]
