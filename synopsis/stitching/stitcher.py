@@ -48,8 +48,8 @@ class Stitcher(AbstractStitcher):
         object_frame[np.where(object_frame == 0)] = 1
         temp = back_ground[y1:y2, x1:x2]
         newmask = object_frame - temp
-        newmask[np.where(newmask > 235)] = 0
-        newmask[np.where(newmask < 15)] = 0
+        newmask[np.where(newmask > 240)] = 0
+        newmask[np.where(newmask < 10)] = 0
         try:
             # newmask = cv.morphologyEx(newmask, cv.MORPH_TOPHAT, (5, 5))
             newmask = cv.erode(newmask, (10, 10), 10)
