@@ -22,8 +22,13 @@ class AbstractStitcher(ABC):
         self.bg_selector = None
 
     @abstractmethod
-    def initialize(self, activity_tubes: List[ActivityTube], schedule: List[int], bg_selector: AbstractBGSelector
-                   , input_frame_count: int, input_fps: int, timestamp: datetime) -> NoReturn:
+    def initialize(self, activity_tubes: List[ActivityTube], schedule: List[int], bg_selector: AbstractBGSelector,
+                   input_frame_count: int, input_fps: int, timestamp: datetime) -> NoReturn:
+        pass
+
+    @abstractmethod
+    def get_foreground(self, back_ground: Array[np.uint8], y1, y2, x1, x2, object_frame: Array[np.uint8]) -> Array[
+        np.uint8]:
         pass
 
     @abstractmethod

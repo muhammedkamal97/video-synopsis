@@ -69,7 +69,8 @@ class Master:
         while True:
             try:
                 ret, frame = capture.read()
-                if not ret:
+
+                if not ret or frame_count == 25000:
                     print("time from start: %.2f minutes" % ((time.time() - t) / 60))
                     self.construct_synopsis(writer, frame_count, start_time)
                     break
@@ -120,9 +121,11 @@ class Master:
         print(len(activity_tubes))
         print(schedule)
 
+        t1 = time.time()
         while self.stitcher.has_next_frame():
             n = self.stitcher.next_frame()
             writer.write(n)
+        print("stitching time : %.2f minutes" % ((time.time() - t1) / 60))
 
         self.activity_aggregator.clear()
         self.bg_selector.clear()

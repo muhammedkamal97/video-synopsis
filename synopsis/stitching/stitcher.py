@@ -43,6 +43,45 @@ class Stitcher(AbstractStitcher):
 
         self.current_frame = self.process_frame()
 
+    def get_foreground(self, back_ground: Array[np.uint8], y1, y2, x1, x2, object_frame: Array[np.uint8]) -> Array[np.uint8]:
+
+        object_frame[np.where(object_frame == 0)] = 1
+        temp = back_ground[y1:y2, x1:x2]
+        newmask = object_frame - temp
+        newmask[np.where(newmask > 240)] = 0
+        newmask[np.where(newmask < 10)] = 0
+        try:
+            # newmask = cv.morphologyEx(newmask, cv.MORPH_TOPHAT, (5, 5))
+            newmask = cv.erode(newmask, (10, 10), 10)
+            # newmask2[np.where(newmask2 >= 200)] = 100
+            # newmask = newmask1 - newmask2
+            # x1_new = int(0.2 * newmask.shape[1])
+            # y1_new = int(0.1 * newmask.shape[0])
+            # x2_new = int(0.8 * newmask.shape[1])
+            # y2_new = int(0.9 * newmask.shape[0])
+            # newmask[y1_new:y2_new, x1_new:x2_new, :] = 255
+        except Exception as e:
+            print(str(e))
+        mask = np.zeros(object_frame.shape[:2], np.uint8)
+        bgdModel = np.zeros((1, 65), np.float64)
+        fgdModel = np.zeros((1, 65), np.float64)
+
+        # whereever it is marked white (sure foreground), change mask=1
+        # whereever it is marked black (sure background), change mask=0
+        mask[np.where(newmask == 0)[:2]] = 0
+        mask[np.where(newmask != 0)[:2]] = 1
+
+        try:
+            mask, bgdModel, fgdModel = cv.grabCut(object_frame, mask, None, bgdModel, fgdModel, 3,
+                                                  cv.GC_INIT_WITH_MASK)
+            mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype('uint8')
+            object_frame = object_frame * mask2[:, :, np.newaxis]
+            indices = np.where(object_frame == 0)
+            object_frame[indices] = temp[indices]
+        except Exception as e:
+            print(str(e))
+        return object_frame        
+        
     def process_frame(self) -> Optional[Array[np.uint8]]:
         if self.frame_count == self.synopsis_length:
             return None
@@ -55,7 +94,8 @@ class Stitcher(AbstractStitcher):
 
         frame = np.array(
             self.bg_selector.map(max(10, int(self.frame_count / self.synopsis_length * self.input_frame_count))))
-
+        
+        back_ground = np.copy(frame)
         tubes_marked_for_deletion = set()
         for active_tube in self.active_tubes:
             # Get tube partial frame to be added in the current frame and increment its state
@@ -65,7 +105,7 @@ class Stitcher(AbstractStitcher):
             # Add tube partial frame to the current frame
             x1, y1 = trackable.box.upper_left
             x2, y2 = trackable.box.lower_right
-            frame[y1:y2, x1:x2] = trackable.data
+            frame[y1:y2, x1:x2] = self.get_foreground(back_ground, y1, y2, x1, x2, trackable.data)
 
             # Compute and attach timestamp
             center = int((x1 + x2) / 2) - 10, int((y1 + y2) / 2)
