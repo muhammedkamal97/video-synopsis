@@ -11,7 +11,8 @@ class DeepSortTracker(AbstractObjectTracker):
 	def __init__(self):
 		metric = nn_matching.NearestNeighborDistanceMetric("cosine", 0.3, None)
 		self.__tracker = Tracker(metric)
-		self.__encoder = generate_detections.create_box_encoder('deep_sort/model/mars-small128.pb', batch_size=1)
+		self.__encoder = generate_detections.create_box_encoder('object/tracking/deep_sort/model/mars-small128.pb',
+																batch_size=1)
 
 	def track(self, frame: Array[np.uint8], detected_boxes: List[BoundingBox]) -> List[int]:
 		results = []
