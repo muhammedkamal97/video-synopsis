@@ -13,7 +13,7 @@ from synopsis.chopping.abstract_synopsis_chopper import AbstractSynopsisChopper
 from synopsis.scheduling.basic_scheduler import BasicScheduler
 from synopsis.stitching.stitcher import Stitcher
 from master.master import Master
-
+from object.detection.mov_object_detection import movObjectDetector
 
 cap = VideoCapture('12_47.mp4')
 
@@ -23,7 +23,7 @@ height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 fps = cap.get(cv.CAP_PROP_FPS)
 
 codec = cv.VideoWriter_fourcc('M', 'J', 'P', 'G')
-out = cv.VideoWriter('output.avi', codec, fps, (width, height))
+out = cv.VideoWriter('output.avi', cv.VideoWriter_fourcc(*'XVID'), fps, (width, height))
 start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
 
 bg_extractor = BGExtractor(1000)
@@ -35,7 +35,7 @@ activity_aggregator = ActivityAggregator()
 # chopper = AbstractSynopsisChopper()
 scheduler = BasicScheduler()
 stitcher = Stitcher()
-
+#object_detector = movObjectDetector(None)
 slaves = {
     'bg_extractor': bg_extractor,
     'bg_selector': bg_selector,
