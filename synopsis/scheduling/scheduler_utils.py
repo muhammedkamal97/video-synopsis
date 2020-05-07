@@ -71,6 +71,48 @@ def get_uncollide_start_frame(act1: ActivityTube, act2: ActivityTube) -> int:
     return start_frame + 1
 
 
+def can_put_activity_tube_in_frame_boxes(act: ActivityTube, frame_num: int, frame_boxes: List[List[BoundingBox]]):
+    for i in range(frame_num, frame_num + act.get_num_frames()):
+        if i >= len(frame_boxes):
+            continue
+        boxes = frame_boxes[i]
+        for box in boxes:
+            if do_boxes_overlap(box, act.get_data()[i - frame_num].box):
+                return False
+    return True
+
+
+def get_box_area(box: BoundingBox) -> float:
+    x1 = box.upper_left[0]
+    y1 = box.upper_left[1]
+    x2 = box.lower_right[0]
+    y2 = box.lower_right[1]
+    return (y2 - y1) * (x2 - x1)
+
+
+def get_boxes_int_rate(box1: BoundingBox, box2: BoundingBox) -> float:
+    inter = compute_boxes_intersection(box1, box2)
+    return max(inter / get_box_area(box1), inter / get_box_area(box2))
+
+
+def add_activity_to_frame_boxes(activity_tube: ActivityTube, start_frame: int, frame_boxes: List[List[BoundingBox]]):
+    while len(frame_boxes) <= start_frame + activity_tube.get_num_frames():
+        frame_boxes.append([])
+    for i in range(activity_tube.get_num_frames()):
+        frame_boxes[start_frame + i].append(activity_tube.get_data()[i].box)
+
+def can_put_activity_tube_in_frame_boxes_int(act: ActivityTube, frame_num: int, frame_boxes: List[List[BoundingBox]],
+                                             rate: float) -> bool:
+    for i in range(frame_num, frame_num + act.get_num_frames()):
+        if i >= len(frame_boxes):
+            continue
+        boxes = frame_boxes[i]
+        for box in boxes:
+            if get_boxes_int_rate(box, act.get_data()[i - frame_num].box) > rate:
+                return False
+    return True
+
+
 def can_put_activity_tube_in_frame(act: ActivityTube, frame_num: int,
                                    activity_tubes: List[ActivityTube], start_frames: List[int]) -> bool:
     """
