@@ -15,7 +15,7 @@ from synopsis.stitching.stitcher import Stitcher
 from master.master import Master
 from object.detection.mov_object_detection import movObjectDetector
 
-cap = VideoCapture('12_47.mp4')
+cap = VideoCapture('../12_47.mp4')
 
 
 width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
@@ -34,7 +34,7 @@ object_tracker = SortTracker()
 activity_aggregator = ActivityAggregator()
 # chopper = AbstractSynopsisChopper()
 scheduler = BasicScheduler()
-stitcher = Stitcher()
+stitcher = Stitcher(segmentation=True)
 #object_detector = movObjectDetector(None)
 slaves = {
     'bg_extractor': bg_extractor,
