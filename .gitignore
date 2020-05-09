@@ -96,3 +96,6 @@ venv/
 *.avi
 *.jpg
 **/__pycache__
+
+data/
+weights/
