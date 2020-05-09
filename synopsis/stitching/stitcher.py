@@ -23,6 +23,10 @@ class Stitcher(AbstractStitcher):
     start_time: datetime
     current_frame: Array[np.uint8]
 
+    def __init__(self, segmentation=False):
+        super(Stitcher, self).__init__()
+        self.segmentation = segmentation
+
     def initialize(self, activity_tubes: List[ActivityTube], schedule: List[int], bg_selector: AbstractBGSelector,
                    input_frame_count: int, input_fps: int, start_time: datetime) -> NoReturn:
         self.activity_tubes = activity_tubes
@@ -105,7 +109,11 @@ class Stitcher(AbstractStitcher):
             # Add tube partial frame to the current frame
             x1, y1 = trackable.box.upper_left
             x2, y2 = trackable.box.lower_right
-            frame[y1:y2, x1:x2] = self.get_foreground(back_ground, y1, y2, x1, x2, trackable.data)
+
+            if self.segmentation:
+                frame[y1:y2, x1:x2] = self.get_foreground(back_ground, y1, y2, x1, x2, trackable.data)
+            else:
+                frame[y1:y2, x1:x2] = trackable.data
 
             # Compute and attach timestamp
             center = int((x1 + x2) / 2) - 10, int((y1 + y2) / 2)
@@ -116,10 +124,9 @@ class Stitcher(AbstractStitcher):
             cv.putText(frame, time_str, center, cv.FONT_HERSHEY_PLAIN, 2, (255, 255, 255), 2, cv.LINE_4)
 
             # For debugging
-
-            cv.putText(frame, str(self.activity_tubes.index(active_tube)), center, cv.FONT_HERSHEY_PLAIN, 3,(0, 0, 0), 5, cv.LINE_4)
-            cv.putText(frame, str(self.activity_tubes.index(active_tube)), center, cv.FONT_HERSHEY_PLAIN, 3, (255, 255, 255), 4, cv.LINE_4)
-            cv.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), thickness=2)
+            # cv.putText(frame, str(self.activity_tubes.index(active_tube)), center, cv.FONT_HERSHEY_PLAIN, 3,(0, 0, 0), 5, cv.LINE_4)
+            # cv.putText(frame, str(self.activity_tubes.index(active_tube)), center, cv.FONT_HERSHEY_PLAIN, 3, (255, 255, 255), 4, cv.LINE_4)
+            # cv.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), thickness=2)
 
             # Check tube state and mark for deletion if all its contents are processed
             if self.activity_tubes_state[active_tube] == active_tube.get_num_frames():

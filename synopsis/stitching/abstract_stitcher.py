@@ -16,7 +16,7 @@ class AbstractStitcher(ABC):
     schedule: List[int]
     bg_selector: AbstractBGSelector
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.activity_tubes = None
         self.schedule = None
         self.bg_selector = None
