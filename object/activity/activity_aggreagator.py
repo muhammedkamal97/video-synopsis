@@ -10,6 +10,10 @@ class ActivityAggregator:
     __activity_tubes: Dict[int, ActivityTube]
 
     def __init__(self, alpha_size=0.9, alpha_loc=0.5):
+        """
+        :param alpha_size: Weight of bounding box size history. Set to 0 to disable size smoothing
+        :param alpha_loc:  Weight of bounding box location history. Set to 0 to disable location smoothing
+        """
         self.__activity_tubes = {}
         self.alpha_size = alpha_size
         self.alpha_loc = alpha_loc
