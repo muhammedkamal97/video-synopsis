@@ -10,7 +10,7 @@ from tensorflow.keras.layers import Conv2D, DepthwiseConv2D, Concatenate, BatchN
 from tensorflow.keras.models import Model
 from tensorflow.keras import backend as K
 
-from yolo3.models.layers import compose, DarknetConv2D
+from object.detection.YOLO.yolo3.models.layers import compose, DarknetConv2D
 
 
 def correct_pad(backend, inputs, kernel_size):

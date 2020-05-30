@@ -5,8 +5,8 @@
 from tensorflow.keras.layers import Conv2D, Add, ZeroPadding2D, UpSampling2D, Concatenate, MaxPooling2D
 from tensorflow.keras.models import Model
 
-from yolo3.models.layers import compose, DarknetConv2D, DarknetConv2D_BN_Leaky, Depthwise_Separable_Conv2D_BN_Leaky, Darknet_Depthwise_Separable_Conv2D_BN_Leaky
-from yolo3.models.layers import make_last_layers, make_depthwise_separable_last_layers, make_spp_last_layers
+from object.detection.YOLO.yolo3.models.layers import compose, DarknetConv2D, DarknetConv2D_BN_Leaky, Depthwise_Separable_Conv2D_BN_Leaky, Darknet_Depthwise_Separable_Conv2D_BN_Leaky
+from object.detection.YOLO.yolo3.models.layers import make_last_layers, make_depthwise_separable_last_layers, make_spp_last_layers
 
 
 def resblock_body(x, num_filters, num_blocks):

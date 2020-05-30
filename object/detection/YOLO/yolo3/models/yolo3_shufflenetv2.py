@@ -4,10 +4,10 @@
 
 from tensorflow.keras.layers import UpSampling2D, Concatenate
 from tensorflow.keras.models import Model
-from common.backbones.shufflenet_v2 import ShuffleNetV2
+from object.detection.YOLO.common.backbones.shufflenet_v2 import ShuffleNetV2
 
 #from yolo3.models.layers import compose, DarknetConv2D, DarknetConv2D_BN_Leaky, Depthwise_Separable_Conv2D_BN_Leaky, make_last_layers, make_depthwise_separable_last_layers, make_spp_depthwise_separable_last_layers
-from yolo3.models.layers import yolo3_predictions, yolo3lite_predictions, tiny_yolo3_predictions, tiny_yolo3lite_predictions
+from object.detection.YOLO.yolo3.models.layers import yolo3_predictions, yolo3lite_predictions, tiny_yolo3_predictions, tiny_yolo3lite_predictions
 
 
 def yolo3_shufflenetv2_body(inputs, num_anchors, num_classes):

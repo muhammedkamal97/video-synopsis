@@ -9,8 +9,8 @@ from tensorflow.keras.layers import Input, GlobalAveragePooling2D, GlobalMaxPool
 from tensorflow.keras.models import Model
 from tensorflow.keras import backend as K
 
-from yolo4.models.layers import compose, DarknetConv2D, DarknetConv2D_BN_Leaky, DarknetConv2D_BN_Mish
-from yolo4.models.layers import yolo4_predictions
+from object.detection.YOLO.yolo4.models.layers import compose, DarknetConv2D, DarknetConv2D_BN_Leaky, DarknetConv2D_BN_Mish
+from object.detection.YOLO.yolo4.models.layers import yolo4_predictions
 
 
 def resblock_body(x, num_filters, num_blocks, all_narrow=True):

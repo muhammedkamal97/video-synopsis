@@ -15,7 +15,7 @@ from master.master import Master
 from object.detection.mov_object_detection import movObjectDetector
 from object.detection.yolo_general_detector import generalDetector
 
-cap = VideoCapture('12_47.mp4')
+cap = VideoCapture('vi.avi')
 
 
 width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
