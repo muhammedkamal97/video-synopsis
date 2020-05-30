@@ -9,17 +9,17 @@ from tensorflow.keras.layers import Input, Lambda, Conv2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 
-from yolo2.models.yolo2_darknet import yolo2_body, tiny_yolo2_body
-from yolo2.models.yolo2_mobilenet import yolo2_mobilenet_body, yolo2lite_mobilenet_body, tiny_yolo2_mobilenet_body, tiny_yolo2lite_mobilenet_body
-from yolo2.models.yolo2_mobilenetv2 import yolo2_mobilenetv2_body, yolo2lite_mobilenetv2_body, tiny_yolo2_mobilenetv2_body, tiny_yolo2lite_mobilenetv2_body
-from yolo2.models.yolo2_xception import yolo2_xception_body, yolo2lite_xception_body
-from yolo2.models.yolo2_efficientnet import yolo2_efficientnet_body, yolo2lite_efficientnet_body, tiny_yolo2_efficientnet_body, tiny_yolo2lite_efficientnet_body
-from yolo2.models.yolo2_mobilenetv3_large import yolo2_mobilenetv3large_body, yolo2lite_mobilenetv3large_body, tiny_yolo2_mobilenetv3large_body, tiny_yolo2lite_mobilenetv3large_body
-from yolo2.models.yolo2_mobilenetv3_small import yolo2_mobilenetv3small_body, yolo2lite_mobilenetv3small_body, tiny_yolo2_mobilenetv3small_body, tiny_yolo2lite_mobilenetv3small_body
-from yolo2.loss import yolo2_loss
-from yolo2.postprocess import batched_yolo2_postprocess
+from object.detection.YOLO.yolo2.models.yolo2_darknet import yolo2_body, tiny_yolo2_body
+from object.detection.YOLO.yolo2.models.yolo2_mobilenet import yolo2_mobilenet_body, yolo2lite_mobilenet_body, tiny_yolo2_mobilenet_body, tiny_yolo2lite_mobilenet_body
+from object.detection.YOLO.yolo2.models.yolo2_mobilenetv2 import yolo2_mobilenetv2_body, yolo2lite_mobilenetv2_body, tiny_yolo2_mobilenetv2_body, tiny_yolo2lite_mobilenetv2_body
+from object.detection.YOLO.yolo2.models.yolo2_xception import yolo2_xception_body, yolo2lite_xception_body
+from object.detection.YOLO.yolo2.models.yolo2_efficientnet import yolo2_efficientnet_body, yolo2lite_efficientnet_body, tiny_yolo2_efficientnet_body, tiny_yolo2lite_efficientnet_body
+from object.detection.YOLO.yolo2.models.yolo2_mobilenetv3_large import yolo2_mobilenetv3large_body, yolo2lite_mobilenetv3large_body, tiny_yolo2_mobilenetv3large_body, tiny_yolo2lite_mobilenetv3large_body
+from object.detection.YOLO.yolo2.models.yolo2_mobilenetv3_small import yolo2_mobilenetv3small_body, yolo2lite_mobilenetv3small_body, tiny_yolo2_mobilenetv3small_body, tiny_yolo2lite_mobilenetv3small_body
+from object.detection.YOLO.yolo2.loss import yolo2_loss
+from object.detection.YOLO.yolo2.postprocess import batched_yolo2_postprocess
 
-from common.model_utils import add_metrics, get_pruning_model
+from object.detection.YOLO.common.model_utils import add_metrics, get_pruning_model
 
 
 # A map of model type to construction info list for YOLOv2

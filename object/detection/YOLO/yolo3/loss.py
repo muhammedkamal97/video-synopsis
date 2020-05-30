@@ -4,7 +4,7 @@
 import math
 import tensorflow as tf
 from tensorflow.keras import backend as K
-from yolo3.postprocess import yolo3_head
+from object.detection.YOLO.yolo3.postprocess import yolo3_head
 
 def softmax_focal_loss(y_true, y_pred, gamma=2.0, alpha=0.25):
     """

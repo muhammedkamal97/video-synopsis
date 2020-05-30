@@ -2,7 +2,7 @@
 # -*- coding=utf-8 -*-
 
 import numpy as np
-from common.yolo_postprocess_np import yolo_head, yolo_handle_predictions, yolo_correct_boxes, yolo_adjust_boxes
+from object.detection.YOLO.common.yolo_postprocess_np import yolo_head, yolo_handle_predictions, yolo_correct_boxes, yolo_adjust_boxes
 
 
 def yolo3_head(predictions, anchors, num_classes, input_dims):
