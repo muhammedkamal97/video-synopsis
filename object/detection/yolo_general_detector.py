@@ -10,7 +10,7 @@ class generalDetector(AbstractObjectDetector):
     
     def __init__(self,arg):
         super(generalDetector, self).__init__()
-        self.yolo_model = YOLO_np(None)
+        self.yolo_model = YOLO_np()
 
     def detect(self, frame: Array[np.uint8], frame_count) -> List[BoundingBox]:
         boxes = []

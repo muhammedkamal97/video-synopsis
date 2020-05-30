@@ -53,7 +53,7 @@ class YOLO_np(object):
         else:
             return "Unrecognized attribute name '" + n + "'"
 
-    def __init__(self, **kwarg):
+    def __init__(self):
         super(YOLO_np, self).__init__()
         self.__dict__.update(self._defaults) # set up default values
         self.class_names = get_classes(self.classes_path)
