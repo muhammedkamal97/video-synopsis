@@ -36,7 +36,7 @@ activity_aggregator = ActivityAggregator()
 scheduler = BasicScheduler()
 stitcher = Stitcher()
 #object_detector = movObjectDetector(None)
-object_detector = generalDetector(None)
+object_detector = generalDetector()
 slaves = {
     'bg_extractor': bg_extractor,
     'bg_selector': bg_selector,

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding=utf-8 -*-
 
-from common.yolo_postprocess_np import yolo_head, yolo_handle_predictions, yolo_correct_boxes, yolo_adjust_boxes
+from object.detection.YOLO.common.yolo_postprocess_np import yolo_head, yolo_handle_predictions, yolo_correct_boxes, yolo_adjust_boxes
 
 
 def yolo2_postprocess_np(yolo_outputs, image_shape, anchors, num_classes, model_image_size, max_boxes=100, confidence=0.1, iou_threshold=0.4):

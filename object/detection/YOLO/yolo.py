@@ -53,7 +53,7 @@ class YOLO_np(object):
         else:
             return "Unrecognized attribute name '" + n + "'"
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwarg):
         super(YOLO_np, self).__init__()
         self.__dict__.update(self._defaults) # set up default values
         self.class_names = get_classes(self.classes_path)
@@ -108,9 +108,9 @@ class YOLO_np(object):
 
         start = time.time()
         out_boxes, out_classes, out_scores = self.predict(image_data, image_shape)
-        print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
+        #print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
         end = time.time()
-        print("Inference time: {:.8f}s".format(end - start))
+        #print("Inference time: {:.8f}s".format(end - start))
 
         return out_boxes, out_classes
 
@@ -195,10 +195,4 @@ def detect_img(yolo):
             r_image = yolo.detect_image(image)
             r_image.show()
 
-
-if __name__ == '__main__':
-    # get wrapped inference object
-    yolo = YOLO_np(**vars(args))
-    
-    detect_video(yolo, args.input, args.output)
     

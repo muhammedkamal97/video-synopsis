@@ -6,9 +6,9 @@ from PIL import Image
 import numpy as np
 import os, cv2, colorsys
 from matplotlib.colors import rgb_to_hsv, hsv_to_rgb
-from common.backbones.efficientnet import swish
-from common.backbones.mobilenet_v3 import hard_sigmoid, hard_swish
-from yolo4.models.layers import mish
+from object.detection.YOLO.common.backbones.efficientnet import swish
+from object.detection.YOLO.common.backbones.mobilenet_v3 import hard_sigmoid, hard_swish
+from object.detection.YOLO.yolo4.models.layers import mish
 import tensorflow as tf
 
 
