@@ -6,7 +6,7 @@ from tensorflow.keras.layers import MaxPooling2D, Lambda, Concatenate, GlobalAve
 from tensorflow.keras.models import Model
 from tensorflow.keras.applications.mobilenet import MobileNet
 
-from yolo2.models.layers import compose, DarknetConv2D, DarknetConv2D_BN_Leaky, Depthwise_Separable_Conv2D_BN_Leaky, bottleneck_block, bottleneck_x2_block, space_to_depth_x2, space_to_depth_x2_output_shape
+from object.detection.YOLO.yolo2.models.layers import compose, DarknetConv2D, DarknetConv2D_BN_Leaky, Depthwise_Separable_Conv2D_BN_Leaky, bottleneck_block, bottleneck_x2_block, space_to_depth_x2, space_to_depth_x2_output_shape
 
 
 

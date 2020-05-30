@@ -4,7 +4,7 @@
 import math
 import tensorflow as tf
 from tensorflow.keras import backend as K
-from yolo2.postprocess import yolo2_head
+from object.detection.YOLO.yolo2.postprocess import yolo2_head
 
 
 def box_iou(b1, b2):
