@@ -1,0 +1,30 @@
+{
+	"object_detector": {
+		"name": "generalDetector",
+		"param": []
+	},
+	"object_tracker": {
+		"name": "sortTracker",
+		"param": []
+	},
+	"back_ground_extractor":{
+		"name": "",
+		"param": []	
+	},
+	"back_ground_selector":{
+		"name": "",
+		"param": []	
+	},
+	"activity_aggreagator":{
+		"name": "",
+		"param": []	
+	},
+	"scheduler":{
+		"name": "",
+		"param": []	
+	},
+	"stitcher":{
+		"name": "",
+		"param": []	
+	}
+}

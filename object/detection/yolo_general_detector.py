@@ -19,7 +19,8 @@ class generalDetector(AbstractObjectDetector):
         
         for box, cl in zip(out_boxes, out_classes):
             xmin, ymin, xmax, ymax = box
-            if cl == 'person':
+            
+            if cl == 14:
                 boxes.append(BoundingBox((xmin, ymin), (xmax, ymax)))
         
-        return merge_boxes(boxes)
+        return boxes
