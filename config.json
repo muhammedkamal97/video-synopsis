@@ -1,4 +1,6 @@
 {
+	"video_input":"vtest.avi",
+	"video_output":"output.avi",
 	"object_detector": {
 		"name": "generalDetector",
 		"param": []

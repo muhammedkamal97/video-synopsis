@@ -17,7 +17,13 @@ from master.master import Master
 from object.detection.mov_object_detection import movObjectDetector
 from object.detection.yolo_general_detector import generalDetector
 
-cap = VideoCapture('vtest.avi')
+config = {}
+with open('config.json') as json_file:
+    config = json.load(json_file)
+
+
+
+cap = VideoCapture(config['video_input'])
 
 
 width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
@@ -25,7 +31,7 @@ height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 fps = cap.get(cv.CAP_PROP_FPS)
 
 codec = cv.VideoWriter_fourcc('M', 'J', 'P', 'G')
-out = cv.VideoWriter('output.avi', cv.VideoWriter_fourcc(*'XVID'), fps, (width, height))
+out = cv.VideoWriter(config['video_output'], cv.VideoWriter_fourcc(*'XVID'), fps, (width, height))
 start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
 
 #bg_extractor = BGExtractor(1000)
@@ -50,9 +56,7 @@ start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
     #'scheduler': scheduler,
     #'stitcher': stitcher
 #}
-config = {}
-with open('config.json') as json_file:
-    config = json.load(json_file)
+
 
 slaves = build_master(config)
 master = Master(slaves)
