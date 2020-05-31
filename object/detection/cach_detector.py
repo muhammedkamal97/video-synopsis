@@ -17,5 +17,7 @@ class CachDetector(AbstractObjectDetector):
         if str(frame_count) not in self.detections:
             return None 
         for box in self.detections[str(frame_count)]:
-            boxes.append(BoundingBox(box['upper_left'], box['lower_right']))
-        return merge_boxes(boxes)
+            l = (box['upper_left'][0], box['upper_left'][1])
+            r = (box['lower_right'][0], box['lower_right'][1])
+            boxes.append(BoundingBox(l, r))
+        return merge_boxes(boxes,frame.shape[1],frame.shape[0])

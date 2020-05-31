@@ -19,8 +19,8 @@ class generalDetector(AbstractObjectDetector):
         
         for box, cl in zip(out_boxes, out_classes):
             xmin, ymin, xmax, ymax = box
-            
-            if cl == 14:
+            #TODO change the number
+            if cl == 14:#14 stand for person
                 boxes.append(BoundingBox((xmin, ymin), (xmax, ymax)))
         
         return boxes

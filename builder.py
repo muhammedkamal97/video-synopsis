@@ -29,7 +29,7 @@ def get_object_detector(object_detector, param):
 	elif object_detector == 'generalDetector':
 		return generalDetector(None)
 	elif object_detector == 'cacheDetector':
-		return CachDetector(param)
+		return CachDetector(param[0])
 	else:
 		return movObjectDetector(None)
 

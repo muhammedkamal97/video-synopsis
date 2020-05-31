@@ -1,5 +1,8 @@
 from object.activity.bounding_box import BoundingBox
-def merge_boxes(boxes):
+def merge_boxes(boxes,width,hight):
+	threashold = min(width, hight)
+	threashold = int(threashold * 0.15)
+	threashold = threashold * threashold
 	merged_boxes = []
 	que = [b for b in boxes]
 	while len(que) != 0:
@@ -8,7 +11,7 @@ def merge_boxes(boxes):
 		merge_happen = False
 		index = 0
 		for i in range(len(que)):
-			if distance(box1,que[i]) < 18000:
+			if overlap(box1,que[i]) or contain(box1,que[i]) or distance(box1,que[i]) < threashold:
 				merge_happen = True
 				index = i
 				break
@@ -27,9 +30,25 @@ def distance(b1,b2):
 	minimum = (p11[0] - p21[0])**2 + (p11[1] - p21[1])**2
 	for p1 in [p11,p12,p13,p14]:
 		for p2 in [p21, p22, p23, p24]:
-			minimum = min(minimum, (p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
+			minimum = min(minimum, ((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2))
 	return minimum
 
+def overlap(b1,b2):
+	if b1.upper_left[0] >= b2.lower_right[0] or b2.lower_right[0] >= b1.upper_left[0]:
+		return False
+	if b1.upper_left[1] >= b2.lower_right[1] or b2.lower_right[1] >= b1.upper_left[1]:
+		return False
+	return True
+
+def contain(b1,b2):
+	#only test on x dimension since y already tested in overlap
+	#b1 contain b2
+	if b1.upper_left[0] > b2.upper_left[0] and b1.lower_right[0] > b2.lower_right[0]:
+		return True
+	#b2 contain b1
+	if b2.upper_left[0] > b1.upper_left[0] and b2.lower_right[0] > b1.lower_right[0]:
+		return True
+	return False
 
 def merge(b1,b2):
 	l1, r1 = b1.upper_left, b1.lower_right

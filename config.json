@@ -2,8 +2,8 @@
 	"video_input":"vtest.avi",
 	"video_output":"output.avi",
 	"object_detector": {
-		"name": "generalDetector",
-		"param": []
+		"name": "movObjectDetector",
+		"param": [{"video_name": "12_47.json"}]
 	},
 	"object_tracker": {
 		"name": "sortTracker",
