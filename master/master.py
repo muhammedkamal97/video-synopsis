@@ -69,7 +69,8 @@ class Master:
         while True:
             try:
                 ret, frame = capture.read()
-                if not ret:
+
+                if not ret or frame_count == 25000:
                     print("time from start: %.2f minutes" % ((time.time() - t) / 60))
                     self.construct_synopsis(writer, frame_count, start_time)
                     break
@@ -117,12 +118,24 @@ class Master:
         activity_tubes = self.activity_aggregator.get_activity_tubes()
         schedule = self.scheduler.schedule(activity_tubes)
         self.stitcher.initialize(activity_tubes, schedule, self.bg_selector, frame_count, self.fps, start_time)
-        print(len(activity_tubes))
-        print(schedule)
 
+        self.log_synopsis_tubes(schedule, activity_tubes)
+
+        t1 = time.time()
         while self.stitcher.has_next_frame():
             n = self.stitcher.next_frame()
             writer.write(n)
+        print("stitching time : %.2f minutes" % ((time.time() - t1) / 60))
 
         self.activity_aggregator.clear()
         self.bg_selector.clear()
+
+    def log_synopsis_tubes(self, schedule, activity_tubes):
+        tubes_lengths = list(map(lambda x: x.get_num_frames(), activity_tubes))
+
+        print('=============================')
+        print('Number of activity tubes = ' + str(len(activity_tubes)))
+        fmt = '{:<8}{:<20}{}'
+        print(fmt.format('', 'Start Frame', 'Length'))
+        for i, (start_frame, frame_count) in enumerate(zip(schedule, tubes_lengths)):
+            print(fmt.format(i, start_frame, frame_count))

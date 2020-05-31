@@ -30,7 +30,7 @@ class BGSelector(AbstractBGSelector):
             else:
                 (score, diff) = structural_similarity(
                     resized_image_curr, self.top_frame, full=True, multichannel=True)
-                if score >= 0.8:  # to be tuned
+                if score >= 0.6:
                     self.background_mapper[frame_no / self.skip_frames] = self.count - 1
                 else:
                     self.background_mapper[frame_no / self.skip_frames] = self.count

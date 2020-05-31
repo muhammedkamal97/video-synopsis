@@ -10,12 +10,14 @@ from object.preprocessing.abstract_preprocessor import AbstractPreprocessor
 from object.activity.activity_aggreagator import ActivityAggregator
 from object.detection.cach_detector import CachDetector
 from object.tracking.sort_tracker import SortTracker
+from object.tracking.deep_sort_tracker import DeepSortTracker
 from synopsis.chopping.abstract_synopsis_chopper import AbstractSynopsisChopper
 from synopsis.scheduling.basic_scheduler import BasicScheduler
 from synopsis.stitching.stitcher import Stitcher
 from master.master import Master
 from object.detection.mov_object_detection import movObjectDetector
 from object.detection.yolo_general_detector import generalDetector
+
 
 config = {}
 with open('config.json') as json_file:
@@ -25,7 +27,6 @@ with open('config.json') as json_file:
 
 cap = VideoCapture(config['video_input'])
 
-
 width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 fps = cap.get(cv.CAP_PROP_FPS)
@@ -33,6 +34,7 @@ fps = cap.get(cv.CAP_PROP_FPS)
 codec = cv.VideoWriter_fourcc('M', 'J', 'P', 'G')
 out = cv.VideoWriter(config['video_output'], cv.VideoWriter_fourcc(*'XVID'), fps, (width, height))
 start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
+
 
 #bg_extractor = BGExtractor(1000)
 #bg_selector = BGSelector(1000)
@@ -42,7 +44,8 @@ start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
 #activity_aggregator = ActivityAggregator()
 # chopper = AbstractSynopsisChopper()
 #scheduler = BasicScheduler()
-#stitcher = Stitcher()
+#stitcher = Stitcher(segmentation=True)
+
 #object_detector = movObjectDetector(None)
 #object_detector = generalDetector(None)
 #slaves = {
