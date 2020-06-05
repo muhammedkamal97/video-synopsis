@@ -61,9 +61,11 @@ class Master:
 		pid = os.getpid()
 		print("master pid=", pid)
 
-		frame_count = multiprocessing.Value('i', 0)
-		background_process = multiprocessing.Process(target=self.background_extractor_worker, args=(video_path, frame_count))
-		synopsis_process = multiprocessing.Process(target=self.synopsis_processor_worker, args=(video_path,))
+		manager = multiprocessing.Manager()
+		resources = manager.dict()
+
+		background_process = multiprocessing.Process(target=self.background_extractor_worker, args=(video_path, resources))
+		synopsis_process = multiprocessing.Process(target=self.synopsis_processor_worker, args=(video_path, resources))
 
 		background_process.start()
 		synopsis_process.start()
@@ -71,13 +73,20 @@ class Master:
 		background_process.join()
 		synopsis_process.join()
 
-		self.construct_synopsis(writer, frame_count.value, start_time)
+		self.activity_aggregator = resources['activity_aggregator']
+		self.bg_selector = resources['bg_selector']
+		self.fps = resources['fps']
 
-	def background_extractor_worker(self, video_path: string, frame_count: multiprocessing.Value):
+		print("****** Frame Count: ", resources['frame_count'])
+		print("****** Activity Tubes: ", len(self.activity_aggregator.get_activity_tubes()))
+
+		self.construct_synopsis(writer, resources['frame_count'], start_time)
+
+	def background_extractor_worker(self, video_path: string, resources):
 		capture = VideoCapture(video_path)
 		if not capture.isOpened():
 			raise Exception("Capture not open")
-		self.fps = capture.get(cv.CAP_PROP_FPS)
+		resources['fps'] = capture.get(cv.CAP_PROP_FPS)
 
 		pid = os.getpid()
 		print("background pid=", pid)
@@ -85,24 +94,25 @@ class Master:
 
 		t = time.time()
 
-		frame_count.value = 0
+		count = 0
 		while True:
 			try:
 				ret, frame = capture.read()
 
-				if not ret or frame_count.value == 10000:
-					return frame_count.value
+				if not ret:
+					resources['bg_selector'] = self.bg_selector
+					resources['frame_count'] = count
+					return
 
-				self.model_background(frame, frame_count.value)
-				frame_count.value = frame_count.value + 1
+				self.model_background(frame, count)
+				count += 1
 
-				if frame_count.value % 1000 == 0:
-					print("--------- Checkpoint: Synopsis -----------")
-					print("number of frames ", frame_count.value)
+				if count % 1000 == 0:
+					print("--------- Checkpoint: Background -----------")
+					print("number of frames ", count)
 					print("memory: ", int(ps.memory_info().rss / (1024 * 1024)), "MB")
 					print("time from start: %.2f minutes" % ((time.time() - t) / 60))
 
-				# frame = self.preprocessor.process(frame)
 				if frame is None:
 					continue
 
@@ -112,13 +122,14 @@ class Master:
 			#     self.construct_synopsis(writer, frame_count, start_time)
 
 			except KeyboardInterrupt:
-				return frame_count.value
+				resources['bg_selector'] = self.bg_selector
+				resources['frame_count'] = count
+				return
 
-	def synopsis_processor_worker(self, video_path: string):
+	def synopsis_processor_worker(self, video_path: string, resources):
 		capture = VideoCapture(video_path)
 		if not capture.isOpened():
 			raise Exception("Capture not open")
-		self.fps = capture.get(cv.CAP_PROP_FPS)
 
 		pid = os.getpid()
 		print("synopsis pid=", pid)
@@ -131,13 +142,14 @@ class Master:
 			try:
 				ret, frame = capture.read()
 
-				if not ret or frame_count == 10000:
-					return frame_count
+				if not ret:
+					resources['activity_aggregator'] = self.activity_aggregator
+					return
 
 				frame_count += 1
 
 				if frame_count % 1000 == 0:
-					print("--------- Checkpoint: Background -----------")
+					print("--------- Checkpoint: Synopsis -----------")
 					print("number of frames ", frame_count)
 					print("memory: ", int(ps.memory_info().rss / (1024 * 1024)), "MB")
 					print("time from start: %.2f minutes" % ((time.time() - t) / 60))
@@ -153,7 +165,8 @@ class Master:
 			#     self.construct_synopsis(writer, frame_count, start_time)
 
 			except KeyboardInterrupt:
-				return frame_count
+				resources['activity_aggregator'] = self.activity_aggregator
+				return
 
 	def model_background(self, frame: Array[np.uint8], frame_count: int):
 		bg_frame = self.bg_extractor.extract_background(frame)
