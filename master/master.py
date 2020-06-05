@@ -70,7 +70,7 @@ class Master:
             try:
                 ret, frame = capture.read()
 
-                if not ret or frame_count == 25000:
+                if not ret:
                     print("time from start: %.2f minutes" % ((time.time() - t) / 60))
                     self.construct_synopsis(writer, frame_count, start_time)
                     break

@@ -11,6 +11,8 @@ from object.tracking.sort_tracker import SortTracker
 from object.tracking.deep_sort_tracker import DeepSortTracker
 from synopsis.chopping.abstract_synopsis_chopper import AbstractSynopsisChopper
 from synopsis.scheduling.basic_scheduler import BasicScheduler
+from synopsis.scheduling.longest_first_scheduler import LongestFirstScheduler
+from synopsis.scheduling.longest_first_int_scheduler import LongestFirstIntScheduler
 from synopsis.stitching.stitcher import Stitcher
 from master.master import Master
 from object.detection.mov_object_detection import movObjectDetector
@@ -30,12 +32,13 @@ bg_extractor = BGExtractor(50)
 bg_selector = BGSelector(50)
 # preprocessor = AbstractPreprocessor()
 object_detector = CachDetector({'video_name': '12_47.json'})
-object_tracker = SortTracker()
+object_tracker = DeepSortTracker()
 activity_aggregator = ActivityAggregator()
 # chopper = AbstractSynopsisChopper()
-scheduler = BasicScheduler()
+scheduler = LongestFirstScheduler()
 stitcher = Stitcher(segmentation=True)
 #object_detector = movObjectDetector(None)
+
 slaves = {
     'bg_extractor': bg_extractor,
     'bg_selector': bg_selector,
