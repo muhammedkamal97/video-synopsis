@@ -63,7 +63,7 @@ class Master:
 
 		frame_count = multiprocessing.Value('i', 0)
 		background_process = multiprocessing.Process(target=self.background_extractor_worker, args=(video_path, frame_count))
-		synopsis_process = multiprocessing.Process(target=self.synopsis_processor_worker, args=video_path)
+		synopsis_process = multiprocessing.Process(target=self.synopsis_processor_worker, args=(video_path,))
 
 		background_process.start()
 		synopsis_process.start()
@@ -90,10 +90,10 @@ class Master:
 			try:
 				ret, frame = capture.read()
 
-				if not ret:
+				if not ret or frame_count.value == 10000:
 					return frame_count.value
 
-				self.model_background(frame, frame_count)
+				self.model_background(frame, frame_count.value)
 				frame_count.value = frame_count.value + 1
 
 				if frame_count.value % 1000 == 0:
@@ -131,7 +131,7 @@ class Master:
 			try:
 				ret, frame = capture.read()
 
-				if not ret:
+				if not ret or frame_count == 10000:
 					return frame_count
 
 				frame_count += 1
