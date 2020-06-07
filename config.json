@@ -1,0 +1,32 @@
+{
+	"video_input":"vtest.avi",
+	"video_output":"output.avi",
+	"object_detector": {
+		"name": "movObjectDetector",
+		"param": [{"video_name": "12_47.json"}]
+	},
+	"object_tracker": {
+		"name": "sortTracker",
+		"param": []
+	},
+	"back_ground_extractor":{
+		"name": "",
+		"param": []	
+	},
+	"back_ground_selector":{
+		"name": "",
+		"param": []	
+	},
+	"activity_aggreagator":{
+		"name": "",
+		"param": []	
+	},
+	"scheduler":{
+		"name": "",
+		"param": []	
+	},
+	"stitcher":{
+		"name": "",
+		"param": []	
+	}
+}

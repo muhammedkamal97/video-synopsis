@@ -74,7 +74,7 @@ class Master:
                     print("time from start: %.2f minutes" % ((time.time() - t) / 60))
                     self.construct_synopsis(writer, frame_count, start_time)
                     break
-
+                
                 self.model_background(frame, frame_count)
 
                 frame_count += 1
@@ -91,7 +91,6 @@ class Master:
 
                 self.process_frame(frame, frame_count)
                 del frame
-
                 # if self.chop_synopsis():
                 #     self.construct_synopsis(writer, frame_count, start_time)
 
@@ -106,6 +105,7 @@ class Master:
         pass
 
     def process_frame(self, frame: Array[np.uint8], frame_count: int = 1):
+        
         detected_boxes = self.object_detector.detect(frame, frame_count)
         object_ids = self.object_tracker.track(frame, detected_boxes)
         self.activity_aggregator.aggregate(frame, detected_boxes, object_ids, frame_count)
