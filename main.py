@@ -13,6 +13,8 @@ from object.tracking.sort_tracker import SortTracker
 from object.tracking.deep_sort_tracker import DeepSortTracker
 from synopsis.chopping.abstract_synopsis_chopper import AbstractSynopsisChopper
 from synopsis.scheduling.basic_scheduler import BasicScheduler
+from synopsis.scheduling.longest_first_scheduler import LongestFirstScheduler
+from synopsis.scheduling.longest_first_int_scheduler import LongestFirstIntScheduler
 from synopsis.stitching.stitcher import Stitcher
 from master.master import Master
 from object.detection.mov_object_detection import movObjectDetector
@@ -36,29 +38,28 @@ out = cv.VideoWriter(config['video_output'], cv.VideoWriter_fourcc(*'XVID'), fps
 start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
 
 
-#bg_extractor = BGExtractor(1000)
-#bg_selector = BGSelector(1000)
+bg_extractor = BGExtractor(1000)
+bg_selector = BGSelector(1000)
 # preprocessor = AbstractPreprocessor()
-#object_detector = CachDetector({'video_name': '12_47.json'})
-#object_tracker = SortTracker()
-#activity_aggregator = ActivityAggregator()
+object_detector = CachDetector({'video_name': '12_47.json'})
+object_tracker = DeepSortTracker()
+activity_aggregator = ActivityAggregator()
 # chopper = AbstractSynopsisChopper()
-#scheduler = BasicScheduler()
-#stitcher = Stitcher(segmentation=True)
-
+scheduler = LongestFirstScheduler()
+stitcher = Stitcher(segmentation=True)
 #object_detector = movObjectDetector(None)
-#object_detector = generalDetector(None)
-#slaves = {
- #   'bg_extractor': bg_extractor,
-  #  'bg_selector': bg_selector,
+
+slaves = {
+    'bg_extractor': bg_extractor,
+    'bg_selector': bg_selector,
     # 'preprocessor': preprocessor,
-   # 'object_detector': object_detector,
-    #'object_tracker': object_tracker,
-    #'activity_aggregator': activity_aggregator,
+    'object_detector': object_detector,
+    'object_tracker': object_tracker,
+    'activity_aggregator': activity_aggregator,
     # 'chopper': chopper,
-    #'scheduler': scheduler,
-    #'stitcher': stitcher
-#}
+    'scheduler': scheduler,
+    'stitcher': stitcher
+}
 
 
 slaves = build_master(config)
