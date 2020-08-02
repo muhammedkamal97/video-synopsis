@@ -1,4 +1,4 @@
-numpy
+numpy==1.17.5
 scipy
 opencv-python
 opencv-contrib-python
@@ -12,9 +12,11 @@ mnn
 Cython
 pycocotools
 keras2onnx
+tf2onnx
 onnx
 onnxruntime
 tfcoreml
 sympy
 imgaug
 imagecorruptions
+bokeh
