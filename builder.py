@@ -4,6 +4,7 @@ from object.preprocessing.abstract_preprocessor import AbstractPreprocessor
 from object.activity.activity_aggreagator import ActivityAggregator
 from object.detection.cach_detector import CachDetector
 from object.tracking.sort_tracker import SortTracker
+from object.tracking.deep_sort_tracker import DeepSortTracker
 from synopsis.chopping.abstract_synopsis_chopper import AbstractSynopsisChopper
 from synopsis.scheduling.basic_scheduler import BasicScheduler
 from synopsis.stitching.stitcher import Stitcher
@@ -36,6 +37,8 @@ def get_object_detector(object_detector, param):
 def get_object_tracker(object_tracker, param):
 	if object_tracker == 'sortTracker':
 		return SortTracker()
+	elif object_tracker == 'deepSortTracker':
+		return DeepSortTracker()	
 	else:
 		return SortTracker()
 
