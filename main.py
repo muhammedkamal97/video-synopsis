@@ -34,6 +34,8 @@ cap.release()
 
 codec = cv.VideoWriter_fourcc('M', 'J', 'P', 'G')
 out = cv.VideoWriter(config['video_output'], cv.VideoWriter_fourcc(*'XVID'), fps, (width, height))
+cap.release()
+
 start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
 
 
