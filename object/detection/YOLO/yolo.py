@@ -108,9 +108,9 @@ class YOLO_np(object):
 
         start = time.time()
         out_boxes, out_classes, out_scores = self.predict(image_data, image_shape)
-        print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
+        #print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
         end = time.time()
-        print("Inference time: {:.8f}s".format(end - start))
+        #print("Inference time: {:.8f}s".format(end - start))
 
         return out_boxes, out_classes
 
