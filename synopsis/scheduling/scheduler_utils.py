@@ -20,9 +20,9 @@ def do_boxes_overlap(box1: BoundingBox, box2: BoundingBox) -> bool:
     bool
         boolean that is true if the two boxes overlap and false otherwise.
     """
-    if box1.upper_left[0] > box2.lower_right[0] or box2.upper_left[0] > box1.lower_right[0]:
+    if box1.upper_left[0] >= box2.lower_right[0] or box2.upper_left[0] >= box1.lower_right[0]:
         return False
-    if box1.lower_right[1] < box2.upper_left[1] or box2.lower_right[1] < box1.upper_left[1]:
+    if box1.lower_right[1] <= box2.upper_left[1] or box2.lower_right[1] <= box1.upper_left[1]:
         return False
     return True
 

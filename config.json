@@ -1,6 +1,6 @@
 {
 	"video_input":"vtest.avi",
-	"video_output":"output.avi",
+	"video_output":"hithere.avi",
 	"object_detector": {
 		"name": "movObjectDetector",
 		"param": [{"video_name": "12_47.json"}]
@@ -22,8 +22,12 @@
 		"param": []	
 	},
 	"scheduler":{
-		"name": "",
-		"param": []	
+		"name": "FirstInFirstOut",
+		"param": [{
+			"SortBy": "None",
+			"MaxBoxes": 0,
+			"IntersectionRatio": 0
+		}]
 	},
 	"stitcher":{
 		"name": "",

@@ -3,6 +3,7 @@ from typing import List
 
 from object.activity.activity_tube import ActivityTube
 from synopsis.scheduling.scheduler_utils import get_video_length, compute_total_intersection
+from itertools import permutations
 
 
 class AbstractEnergyCalculator(ABC):
@@ -23,8 +24,9 @@ class AbstractEnergyCalculator(ABC):
 
 class SimpleEnergyCalculator(AbstractEnergyCalculator):
 
-    def __init__(self, alpha=1):
+    def __init__(self, alpha=0.0002, beta=.05):
         self.alpha = alpha
+        self.beta = beta
 
     def compute_energy(self, activity_tubes: List[ActivityTube], start_frames: List[int]) -> float:
         """
@@ -40,5 +42,24 @@ class SimpleEnergyCalculator(AbstractEnergyCalculator):
         :return: The energy of the synopsis video.
         :rtype: float
         """
-        energy = get_video_length(activity_tubes, start_frames) + self.alpha * compute_total_intersection(activity_tubes, start_frames)
+
+        # print("Video Length : ", end="")
+        # print(get_video_length(activity_tubes, start_frames))
+        energy = get_video_length(activity_tubes, start_frames)
+
+        # print("Intersection : ", end="")
+        # print(compute_total_intersection(activity_tubes, start_frames))
+        energy += self.alpha * compute_total_intersection(activity_tubes, start_frames)
+
+        disorder = 0
+        for i,j in permutations(range(len(activity_tubes)), 2):
+            if activity_tubes[i].start_frame < activity_tubes[j].start_frame and start_frames[i] > start_frames[j]:
+                disorder += 1
+            if activity_tubes[i].start_frame > activity_tubes[j].start_frame and start_frames[i] < start_frames[j]:
+                disorder += 1
+
+        # print("Disorder : ", end="")
+        # print(disorder)
+        energy += self.beta * disorder
+        
         return energy
