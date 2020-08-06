@@ -1,7 +1,7 @@
 from object.activity.bounding_box import BoundingBox
 def merge_boxes(boxes,width,hight):
 	threashold = min(width, hight)
-	threashold = int(threashold * 0.15)
+	threashold = int(threashold * 0.1)
 	threashold = threashold * threashold
 	merged_boxes = []
 	que = [b for b in boxes]
@@ -12,6 +12,7 @@ def merge_boxes(boxes,width,hight):
 		index = 0
 		for i in range(len(que)):
 			if overlap(box1,que[i]) or contain(box1,que[i]) or distance(box1,que[i]) < threashold:
+			#if distance(box1,que[i]) < threashold:
 				merge_happen = True
 				index = i
 				break
@@ -23,6 +24,7 @@ def merge_boxes(boxes,width,hight):
 	return merged_boxes
 
 def distance(b1,b2):
+	'''
 	l1, r1 = b1.upper_left, b1.lower_right
 	p11, p12, p13, p14 = l1, (r1[0],l1[1]), (l1[0],r1[1]), r1
 	l2, r2 = b2.upper_left, b2.lower_right
@@ -31,7 +33,10 @@ def distance(b1,b2):
 	for p1 in [p11,p12,p13,p14]:
 		for p2 in [p21, p22, p23, p24]:
 			minimum = min(minimum, ((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2))
-	return minimum
+	'''
+	p1 = ((b1.upper_left[0]+b1.lower_right[0])/2,(b1.upper_left[1]+b1.lower_right[1])/2)
+	p2 = ((b2.upper_left[0]+b2.lower_right[0])/2,(b2.upper_left[1]+b2.lower_right[1])/2)
+	return (p1[0] - p2[0])**2 + (p1[1] - p2[1])**2
 
 def overlap(b1,b2):
 	if b1.upper_left[0] >= b2.lower_right[0] or b2.lower_right[0] >= b1.upper_left[0]:

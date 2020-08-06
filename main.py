@@ -65,4 +65,4 @@ slaves = {
 slaves = build_master(config)
 master = Master(slaves)
 master.run(cap, out, start_time)
-
+print('shape: ',width,', ',height)
