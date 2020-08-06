@@ -3,7 +3,7 @@
 	"video_output":"hithere.avi",
 	"object_detector": {
 		"name": "movObjectDetector",
-		"param": [{"video_name": "12_47.json"}]
+		"param": []
 	},
 	"object_tracker": {
 		"name": "sortTracker",
