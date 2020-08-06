@@ -12,9 +12,7 @@ from object.detection.cach_detector import CachDetector
 from object.tracking.sort_tracker import SortTracker
 from object.tracking.deep_sort_tracker import DeepSortTracker
 from synopsis.chopping.abstract_synopsis_chopper import AbstractSynopsisChopper
-from synopsis.scheduling.basic_scheduler import BasicScheduler
-from synopsis.scheduling.longest_first_scheduler import LongestFirstScheduler
-from synopsis.scheduling.longest_first_int_scheduler import LongestFirstIntScheduler
+from synopsis.scheduling.first_in_first_out_scheduler import FirstInFirstOutScheduler
 from synopsis.stitching.stitcher import Stitcher
 from master.master import Master
 from object.detection.mov_object_detection import movObjectDetector
@@ -45,21 +43,21 @@ object_detector = CachDetector({'video_name': '12_47.json'})
 object_tracker = DeepSortTracker()
 activity_aggregator = ActivityAggregator()
 # chopper = AbstractSynopsisChopper()
-scheduler = LongestFirstScheduler()
+scheduler = FirstInFirstOutScheduler()
 stitcher = Stitcher(segmentation=True)
 #object_detector = movObjectDetector(None)
 
-slaves = {
-    'bg_extractor': bg_extractor,
-    'bg_selector': bg_selector,
-    # 'preprocessor': preprocessor,
-    'object_detector': object_detector,
-    'object_tracker': object_tracker,
-    'activity_aggregator': activity_aggregator,
-    # 'chopper': chopper,
-    'scheduler': scheduler,
-    'stitcher': stitcher
-}
+# slaves = {
+#     'bg_extractor': bg_extractor,
+#     'bg_selector': bg_selector,
+#     # 'preprocessor': preprocessor,
+#     'object_detector': object_detector,
+#     'object_tracker': object_tracker,
+#     'activity_aggregator': activity_aggregator,
+#     # 'chopper': chopper,
+#     'scheduler': scheduler,
+#     'stitcher': stitcher
+# }
 
 
 slaves = build_master(config)

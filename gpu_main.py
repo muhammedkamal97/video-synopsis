@@ -7,7 +7,7 @@ from object.activity.activity_aggreagator import ActivityAggregator
 from object.detection.yolo_detector import YoloDetector
 from object.tracking.sort_tracker import SortTracker
 from synopsis.chopping.abstract_synopsis_chopper import AbstractSynopsisChopper
-from synopsis.scheduling.basic_scheduler import BasicScheduler
+from synopsis.scheduling.first_in_first_out_scheduler import FirstInFirstOutScheduler
 from synopsis.stitching.stitcher import Stitcher
 from master.master import Master
 from datetime import datetime
@@ -30,7 +30,7 @@ object_detector = YoloDetector(None)
 object_tracker = SortTracker()
 activity_aggregator = ActivityAggregator()
 # chopper = AbstractSynopsisChopper()
-scheduler = BasicScheduler()
+scheduler = FirstInFirstOutScheduler()
 stitcher = Stitcher()
 
 slaves = {
