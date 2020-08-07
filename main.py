@@ -30,9 +30,12 @@ cap = VideoCapture(config['video_input'])
 width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 fps = cap.get(cv.CAP_PROP_FPS)
+cap.release()
 
 codec = cv.VideoWriter_fourcc('M', 'J', 'P', 'G')
 out = cv.VideoWriter(config['video_output'], cv.VideoWriter_fourcc(*'XVID'), fps, (width, height))
+cap.release()
+
 start_time = datetime.strptime('22/10/2019 12:47:38', '%d/%m/%Y %H:%M:%S')
 
 
@@ -62,5 +65,5 @@ stitcher = Stitcher(segmentation=True)
 
 slaves = build_master(config)
 master = Master(slaves)
-master.run(cap, out, start_time)
+master.run(config['video_input'], out, start_time)
 print('shape: ',width,', ',height)
