@@ -120,8 +120,8 @@ class Stitcher(AbstractStitcher):
             delta_seconds = (self.activity_tubes_state[active_tube] + active_tube.start_frame) / self.input_fps
             timestamp = self.start_time + timedelta(0, int(delta_seconds))
             time_str = str(timestamp.hour).zfill(2) + ":" + str(timestamp.minute).zfill(2)
-            cv.putText(frame, time_str, center, cv.FONT_HERSHEY_PLAIN, 2, (0, 0, 0), 5  , cv.LINE_4)
-            cv.putText(frame, time_str, center, cv.FONT_HERSHEY_PLAIN, 2, (255, 255, 255), 2, cv.LINE_4)
+            cv.putText(frame, time_str, center, cv.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 5  , cv.LINE_4)
+            cv.putText(frame, time_str, center, cv.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2, cv.LINE_4)
 
             # For debugging
             # cv.putText(frame, str(self.activity_tubes.index(active_tube)), center, cv.FONT_HERSHEY_PLAIN, 3,(0, 0, 0), 5, cv.LINE_4)
