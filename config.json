@@ -1,7 +1,7 @@
 {
 	"video_input":"vtest.avi",
 	"video_output":"hithere.avi",
-	"time":"22/10/2019 0:0:0"
+	"time":"22/10/2019 0:0:0",
 	"object_detector": {
 		"name": "movObjectDetector",
 		"param": []
