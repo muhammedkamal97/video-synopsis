@@ -1,7 +1,7 @@
 from object.activity.bounding_box import BoundingBox
 def merge_boxes(boxes,width,hight):
 	threashold = min(width, hight)
-	threashold = int(threashold * 0.1)
+	threashold = int(threashold * 0.01)
 	threashold = threashold * threashold
 	merged_boxes = []
 	que = [b for b in boxes]

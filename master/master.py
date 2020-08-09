@@ -185,10 +185,13 @@ class Master:
 	def construct_synopsis(self, writer: VideoWriter, frame_count: int, start_time: datetime):
 		activity_tubes = self.activity_aggregator.get_activity_tubes()
 		schedule = self.scheduler.schedule(activity_tubes)
-		self.stitcher.initialize(activity_tubes, schedule, self.bg_selector, frame_count, self.fps, start_time)
-
-		self.log_synopsis_tubes(schedule, activity_tubes)
-
+		actube = []
+		for ac in activity_tubes:
+			if ac.get_num_frames() >= self.fps:
+				actube.append(ac)
+		schedule = self.scheduler.schedule(actube)
+		self.stitcher.initialize(actube, schedule, self.bg_selector, frame_count, self.fps, start_time)
+		self.log_synopsis_tubes(schedule, actube)
 		t1 = time.time()
 		while self.stitcher.has_next_frame():
 			n = self.stitcher.next_frame()
