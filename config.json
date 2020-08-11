@@ -25,9 +25,9 @@
 	"scheduler":{
 		"name": "FirstInFirstOut",
 		"param": [{
-			"SortBy": "None",
-			"MaxBoxes": 0,
-			"IntersectionRatio": 0
+			"SortBy": "Longest",
+			"MaxBoxes": 5,
+			"IntersectionRatio": 0.1
 		}]
 	},
 	"stitcher":{
